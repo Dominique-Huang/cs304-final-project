@@ -14,7 +14,6 @@ def login():
     school = request.form.get('school')
     pw = request.form.get('pw')
     pw2 = request.form.get('pw2')
-
     valid = True
     if(name.length < 4):
         flash("Name must be at least 4 characters long")
@@ -24,7 +23,6 @@ def login():
         valid = False
     if(pw != pw2):
         flash("The pas")
-
     loft.createUser(conn, name, email, school, pw)
     return render_template('login.html')
 
