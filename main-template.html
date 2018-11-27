@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    {% block head %}
+    <title>{% block title %}{% endblock %}</title>
+    <meta charset="utf-8">
+    <meta name=author content="">
+    <meta name=description content="">
+    <meta name=keywords content="">
+    <title></title>
+    <!-- css stylesheets -->
+    <link rel="stylesheet" href="">
+    <!-- fonts -->
+    {% endblock %}
+</head>
+<body>
+    <div id="content">{% block content %}
+    {% endblock %}
+    </div>
+    
+    <div id="footer">
+        {% block footer %}
+        {% endblock %}
+    </div>
+</body>
+</html>
