@@ -43,7 +43,7 @@ def homePage():
 def showPage():
     return render_template('show.html')
 
-@app.route('/edit/<id>', methods = ["GET"])
+@app.route('/edit/<id>', methods = ["GET", "POST"])
 def editPage():
     return render_template('show.html')
 

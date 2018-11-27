@@ -22,14 +22,16 @@ create table tenants(
     gender int(1) DEFAULT 0, /*1 for female, 2 for male, 3 for other*/
     pet bit DEFAULT 0, /*1 if has pet, 0 if not*/
     UID int(15) unsigned,
-    foreign key (UID) references users(UID) on delete cascade on update cascade 
+    foreign key (UID) references users(UID) on delete cascade on update cascade
 )
 ENGINE = InnoDB;
 
 drop table if exists properties;
 create table properties(
+  -- add in description
     /* how do we want to display features, gender, availability? */
     `propName` varchar(30) DEFAULT NULL,
+    `propDescription` varchar(30) DEFAULT NULL,
     `propLocation` varchar(150) DEFAULT NULL,
     `propPrice` int(10) unsigned DEFAULT NULL,
     `propSmoker` bit DEFAULT 0, /*1 if okay with smoker, 0 if not*/
