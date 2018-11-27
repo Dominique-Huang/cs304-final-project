@@ -25,10 +25,19 @@ def login():
     if(pw != pw2):
         flash("The pas")
     
-    
     loft.createUser(conn, name, email, school, pw)
     return render_template('login.html')
+
+@app.route('/add-property/', methods = ["POST"])
+def addProperty():
+    name = request.form.get('name')
+    loc = request.form.get('location')
+    price = request.form.get('price')
+    smoker = request.form.get('smoker')
+    gender = request.form.get('gender')
+    pet = request.form.get('pet')
     
+
 if __name__ == '__main__':
     app.debug = True
     app.run('0.0.0.0',8081)

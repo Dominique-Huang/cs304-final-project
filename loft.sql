@@ -1,59 +1,62 @@
 --
 -- Current Database: `loft`
 --
+
 use `loft`;
 
 /* Create tables for user and properties */
 
+drop table if exists tenants;
 drop table if exists users;
-drop table if exists properties;
-
 create table users(
     `name` varchar(20) DEFAULT NULL,
     `email` varchar(30) DEFAULT NULL,
     `pw` varchar(60) DEFAULT NULL,
     `university` varchar(40) DEFAULT NULL,
-    `UID` int(15) unsigned unsigned NOT NULL AUTO_INCREMENT,
-    PRIMARY KEY (`UID`)
+    UID int(15) unsigned NOT NULL AUTO_INCREMENT,
+    PRIMARY KEY (UID)
 );
 
 create table tenants(
     smoker bit DEFAULT 0, /*1 if smoker, 0 if not*/
     gender int(1) DEFAULT 0, /*1 for female, 2 for male, 3 for other*/
     pet bit DEFAULT 0, /*1 if has pet, 0 if not*/
-) INHERITS (users);
+    UID int(15) unsigned,
+    foreign key (UID) references users(UID) on delete cascade on update cascade 
+)
+ENGINE = InnoDB;
 
+drop table if exists properties;
 create table properties(
     /* how do we want to display features, gender, availability? */
     `propName` varchar(30) DEFAULT NULL,
-    `propDescrip` varchar(150) DEFAULT NULL,
     `propLocation` varchar(150) DEFAULT NULL,
     `propPrice` int(10) unsigned DEFAULT NULL,
     `propSmoker` bit DEFAULT 0, /*1 if okay with smoker, 0 if not*/
     `propGender` int(1) DEFAULT 0, /*1 if female only, 2 if male only, 3 if no preference*/
     `propPet` bit DEFAULT 0, /*1 if okay with pet, 0 if not*/
     `PID` int(10) unsigned NOT NULL AUTO_INCREMENT,
-    PRIMARY KEY (`PID`)
+    PRIMARY KEY (PID)
 );
 
+drop table if exists dates;
 create table dates(
-    `PID` int(10),
+    PID int(10),
     startDate date,
     endDate date,
-    foreign key (`PID`) references properties(`PID`)
-) ENGINE = InnoDB;
+);
 
+drop table if exists featuresTenants;
 create table featuresTenants(
-    `UID` int(10),
-    features varchar(100),
-    foreign key (`UID`) references tenants(`UID`)
-) ENGINE = InnoDB;
+    UID int(10),
+    features varchar(100)
+);
 
+drop table if exists featuresProperties;
 create table featuresProperties(
-    `PID` int(10),
-    features varchar(100),
-    foreign key (`PID`) references properties(`PID`)
-) ENGINE = InnoDB;
+    PID int(10),
+    features varchar(100)
+);
 
 /* Map relationships*/
 
@@ -65,6 +68,7 @@ create table host_prop(
     primary key (UID, PID)
 );
 
-INSERT INTO `users` VALUES ('Freddie(host)','Boston University',1), ('Freddie2(not host)','Massachusetts Institute of Technology',2);
-INSERT INTO `properties` VALUES ('1 BR near Kendall','Single bedroom in apartment near Kendall Square','Kendall Square, Cambridge','1000',1), ('3 BR apartment near Central','Entire apartment include 3 BR located in Central','Central Square, Cambridge','4000',2);
-INSERT INTO `host_prop` VALUES (1,1), (1, 2);
+INSERT INTO users VALUES ('Freddie', 'freddie@bu.edu', 'password','Boston University',1), ('Mary','mary@mit.edu', 'password','Massachusetts Institute of Technology', NULL);
+INSERT INTO tenants VALUES (0, 2, 0, 1)
+-- INSERT INTO `properties` VALUES ('1 BR near Kendall','Single bedroom in apartment near Kendall Square','Kendall Square, Cambridge','1000',1), ('3 BR apartment near Central','Entire apartment include 3 BR located in Central','Central Square, Cambridge','4000',2);
+-- INSERT INTO `host_prop` VALUES (1,1), (1, 2);
