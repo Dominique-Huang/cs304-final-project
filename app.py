@@ -14,7 +14,6 @@ def login():
     school = request.form.get('school')
     pw = request.form.get('pw')
     pw2 = request.form.get('pw2')
-    
     valid = True
     if(name.length < 4):
         flash("Name must be at least 4 characters long")
@@ -24,7 +23,6 @@ def login():
         valid = False
     if(pw != pw2):
         flash("The pas")
-    
     loft.createUser(conn, name, email, school, pw)
     return render_template('login.html')
 
@@ -35,11 +33,10 @@ def showProperties():
         gender = request.form.get('gender')
         location = request.form.get('location')
         price = request.form.get('price')
-        lofts = loft.(gender,location,price)
+        lofts = loft.searchProp(conn, gender,location,price)
     else: 
         lofts = loft.searchProp(conn, 3, "", 100000) #shows all properties
-    
-    
+    return render_template('', lofts = lofts)
     
 @app.route('/add-property/', methods = ["POST"])
 def addProperty():
@@ -52,10 +49,23 @@ def addProperty():
     pet = request.form.get('pet')
     
     loft.createProperty(conn, name, loc, price, smoker, gender, pet)
-    
-    
+
+@app.route('/home/', methods = ["GET"])
+def homePage():
+    return render_template('index.html')
+
+@app.route('/show/<id>', methods = ["GET"])
+def showPage():
+    return render_template('show.html')
+
+@app.route('/edit/<id>', methods = ["GET", "POST"])
+def editPage():
+    return render_template('show.html')
+
+@app.route('/profile/', methods = ["GET"])
+def profilePage():
+    return render_template('profile.html')
 
 if __name__ == '__main__':
     app.debug = True
     app.run('0.0.0.0',8081)
-    
