@@ -28,14 +28,31 @@ def login():
     loft.createUser(conn, name, email, school, pw)
     return render_template('login.html')
 
+@app.route('/properties/', methods = ["GET","POST"])
+def showProperties():
+    conn = loft.getConn('loft')
+    if request.method == 'POST':
+        gender = request.form.get('gender')
+        location = request.form.get('location')
+        price = request.form.get('price')
+        lofts = loft.(gender,location,price)
+    else: 
+        lofts = loft.searchProp(conn, 3, "", 100000) #shows all properties
+    
+    
+    
 @app.route('/add-property/', methods = ["POST"])
 def addProperty():
+    conn = loft.getConn('loft')
     name = request.form.get('name')
     loc = request.form.get('location')
     price = request.form.get('price')
     smoker = request.form.get('smoker')
     gender = request.form.get('gender')
     pet = request.form.get('pet')
+    
+    loft.createProperty(conn, name, loc, price, smoker, gender, pet)
+    
     
 
 if __name__ == '__main__':

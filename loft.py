@@ -12,13 +12,11 @@ def getConn(db):
     return conn
 
 #--Adding to Database-- 
-
 def createUser(conn, name, email, school, pw):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('''insert into users values (%s, %s, &s, %s, NULL)''', 
                 (name, email, school, pw,))
     return curs.fetchone()
-
 def createProperty(conn, name, loc, price, smoker, gender, pet):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('''insert into properties values (%s, %s, &s, %s, %s, %s, NULL)''', 
@@ -57,7 +55,7 @@ def searchProp(conn, gender, location, price):
     location = "%" + location + "%"
     curs.execute('''select * from properties where gender in (%s) and location like %s and price < %s''',
                 (gender, location, price))
-    curs.fetchone()
+    return curs.fetchall()
 
 if __name__ == '__main__':
     conn = getConn('loft')
