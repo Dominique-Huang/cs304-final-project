@@ -10,13 +10,21 @@
     <meta name=keywords content="">
     <title></title>
     <!-- css stylesheets -->
-    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
     <!-- fonts -->
 </head>
 
 <body>
+      <div class="card border-dark mb-3" style="max-width: 18rem;">
+        <div class="card-header">Name</div>
+        <img class="card-img-top" src="..." alt="Card image cap">
+        <div class="card-body text-dark">
+          <h5 class="card-title">description</h5></h5>
+          <p class="card-text">propLocation</p>
+          <p class="card-text">Price</p>
+        </div>
+      </div>
 
-    <div id="contentContainer">
       <div class="card border-dark mb-3" data-id={{item.PID}} style="max-width: 18rem;">
         <div class="card-header">{{item.propName}}</div>
         <img class="card-img-top" src="..." alt="Card image cap">
@@ -26,7 +34,7 @@
           <p class="card-text">{{item.propPrice}}</p>
         </div>
       </div>
-    </div>
+
 </body>
 
 </html>
