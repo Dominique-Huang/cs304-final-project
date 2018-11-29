@@ -59,7 +59,6 @@ def addProperty():
     
     loft.createProperty(conn, name, loc, price, smoker, gender, pet)
 
-# display page with all properties
 @app.route('/home/', methods = ["GET"])
 def homePage():
     conn = getConn('properties')
