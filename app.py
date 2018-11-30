@@ -78,25 +78,22 @@ def addProperty():
     else:
         return render_template('X.html')
 
-@app.route('/properties/', methods = ["GET","POST"])
+@app.route('/', methods = ["GET","POST"])
 def showProperties():
     conn = loft.getConn('loft')
     if request.method == 'POST':
-        gender = request.form.get('gender')
+        gender = int(request.form.get('gender'))
         location = request.form.get('location')
-        price = request.form.get('price')
-        lofts = loft.searchProp(conn, gender,location,price)
+        price = request.form.get('price') #might use price ranges in the future
+        if price == "":
+            price = 100000 #no upper limit
+        propList = loft.searchProp(conn, gender, location, price)
     else: 
-        lofts = loft.searchProp(conn, 3, "", 100000) #shows all properties
-    return render_template('', lofts = lofts)
-
-@app.route('/', methods = ["GET"])
-def homePage():
-    #conn = loft.getConn('properties')
-    conn = loft.getConn('loft')
-    propList = loft.getAll(conn)
+        propList = loft.searchProp(conn, 3, "", 100000) #shows all properties
+    
     return render_template('index.html', propList = propList)
 
+@app.route('/show/<id>', methods = ["GET"])
 def showPage(id):
     #conn = loft.getConn('properties')
     conn = loft.getConn('loft')

@@ -52,9 +52,9 @@ def addHostProp(conn, UID, PID):
 def searchProp(conn, gender, location, price):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     if(gender == 3): #no preference
-        gender = "1, 2, 3"
+        gender = "1, 2, 3 "
     location = "%" + location + "%"
-    curs.execute('''select * from properties where gender in (%s) and location like %s and price < %s''',
+    curs.execute('''select * from properties where propGender in (%s) and propLocation like %s and propPrice < %s''',
                 (gender, location, price))
     return curs.fetchall()
 
@@ -96,3 +96,4 @@ if __name__ == '__main__':
     conn = getConn('loft')
     # user = createUser(conn, 'Ally', 'ally@tufts.edu', 'Password123', 'Tufts University')
     prop = createProperty(conn, 'House', 'A House in Boston', 'Boston', 800, 0, 1, 0)
+    print(searchProp(conn,3,"",10000))

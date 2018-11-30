@@ -15,6 +15,20 @@
 </head>
 
 <body>
+  
+  <form method = "POST" action = "{{ url_for('showProperties') }}">
+    <p>
+      <select name = 'gender'>
+      <option value = 1>Female</option>
+      <option value = 2>Male</option>
+      <option value = 3>Other</option>
+      <option value = 3>Any</option>
+      </select>
+    </p>
+    <p><label>Location: <input name = "location"></label></p>
+    <p><label>Highest Price: <input name = 'price' type = 'number'></label></p>
+    <p><button type = "submit">Submit</button></p>
+  </form>
   <div>
       {% for item in propList%}
         <!-- Change the border color -->
