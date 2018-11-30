@@ -15,6 +15,7 @@ def login():
     pw = request.form.get('pw')
     pw2 = request.form.get('pw2')
 
+    #Add bcrypt in beta
     valid = True
     if(name.length < 4):
         flash("Name must be at least 4 characters long")
@@ -51,7 +52,7 @@ def addProperty():
     
     loft.createProperty(conn, name, loc, price, smoker, gender, pet)
 
-@app.route('/home/', methods = ["GET"])
+@app.route('/', methods = ["GET"])
 def homePage():
     return render_template('index.html')
 
