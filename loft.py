@@ -74,9 +74,14 @@ def getAll(conn):
     curs.execute('''select * from properties''')
     return curs.fetchall()
 
-def getOne(conn):
+def getOne(conn, id):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('''select * from properties where PID = %s''', (id))
+    curs.execute('''select * from properties where PID = %s''', [id])
+    return curs.fetchone()
+    
+def getProfile(conn, id):
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''select * from users where UID = %s''', [id])
     return curs.fetchone()
 
 if __name__ == '__main__':
