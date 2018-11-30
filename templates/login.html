@@ -1,20 +1,4 @@
 <!doctype html>
-<<<<<<< HEAD
-
-<head>
-    <title>Login</title>
-</head>
-
-    <!-- Form to create a user -->
-    <form method = "POST" action = "">
-        <p><label>Name: <input name = "name"></label></p>
-        <p><label>University Email: <input name = "email" ></label></p>
-        <p><label>University: <input name = "school"></label></p>
-        <p><label>Password: <input name = "pw" type = "password"></label></p>
-        <p><label>Re-enter Password: <input name = "pw_confirm" type = "password"></label></p>
-        <p><button class = "sign_up" type = "submit">Sign Up</button></p>
-    </form>
-=======
 <html lang="en">
 
 <head>
@@ -28,17 +12,26 @@
     <!-- fonts -->
 </head>
 <body>
-  <!-- Form to create a user -->
-  <form method = "POST" action = "">
-      <p><label>Name: <input name = "name"></label></p>
-      <p><label>University Email: <input name = "email" ></label></p>
-      <p><label>University: <input name = "school"></label></p>
-      <p><label>Password: <input name = "pw" type = "password"></label></p>
-      <p><label>Re-enter Password: <input name = "pw_confirm" type = "password"></label></p>
-      <p><button class = "sign_up" type = "submit">Sign Up</button></p>
+    <!--display all flashed messages-->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div id="messages">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    <!-- Form to create a user -->
+    <form method = "POST" action = "{{ url_for('addUser') }}">
+        <p><label>Name: <input name = "name"></label></p>
+        <p><label>University Email: <input name = "email" ></label></p>
+        <p><label>University: <input name = "school"></label></p>
+        <p><label>Password: <input name = "pw" type = "password"></label></p>
+        <p><label>Re-enter Password: <input name = "pw_confirm" type = "password"></label></p>
+        <p><button class = "sign_up" type = "submit">Sign Up</button></p>
   </form>
 
 </body>
 
 </html>
->>>>>>> 8182b6525389449e795cb3c08512b41a1008a710

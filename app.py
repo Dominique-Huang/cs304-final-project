@@ -6,26 +6,40 @@ app = Flask(__name__)
 
 app.secret_key = "Mb.Jp2u/6XT/)b`."
 
-@app.route('/login/', methods = ["POST"])
-def login():
-    conn = loft.getConn('loft')
-    name = request.form.get('name')
-    email = request.form.get('email')
-    school = request.form.get('school')
-    pw = request.form.get('pw')
-    pw2 = request.form.get('pw2')
-
-    valid = True
-    if(name.length < 4):
-        flash("Name must be at least 4 characters long")
-        valid = False
-    if(email[-4:] != ".edu" and "@" not in email):
-        flash("Please enter a valid school email")
-        valid = False
-    if(pw != pw2):
-        flash("The pas")
-    loft.createUser(conn, name, email, school, pw)
-    return render_template('login.html')
+@app.route('/start/', methods = ['POST', 'GET'])
+# For first time users to create an account
+# Would need to create an extra section for tenants
+def addUser():
+    
+    if request.method == 'POST':
+        conn = loft.getConn('loft')
+        name = request.form.get('name')
+        email = request.form.get('email')
+        school = request.form.get('school')
+        pw = request.form.get('pw')
+        pw2 = request.form.get('pw_confirm')
+        
+        print(any(char.isdigit() for char in pw))
+        valid = True
+        if(len(name) < 4):
+            flash("Name must be at least 4 characters long")
+            valid = False
+        if(email[-4:] != ".edu" or "@" not in email):
+            flash("Please enter a valid school email")
+            valid = False
+        if(pw != pw2):
+            flash("The passwords do not match")
+            valid = False
+        elif (len(pw) < 6 or any(char.isdigit() for char in pw) == False): #only checks when passwords match
+            flash("Password is too weak, must be longer than 6 characters and contain a digit")
+            valid = False
+        
+        # print valid
+        if valid == True:
+            loft.createUser(conn, name, email, school, pw)
+        return render_template('login.html')
+    else:
+        return render_template('login.html')
 
 @app.route('/properties/', methods = ["GET","POST"])
 def showProperties():
@@ -40,6 +54,7 @@ def showProperties():
     return render_template('', lofts = lofts)
     
 @app.route('/add-property/', methods = ["POST"])
+# For first time users to create an account
 def addProperty():
     conn = loft.getConn('loft')
     name = request.form.get('name')
