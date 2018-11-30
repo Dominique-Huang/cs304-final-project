@@ -100,15 +100,19 @@ def showPage(id):
     #conn = loft.getConn('properties')
     conn = loft.getConn('loft')
     prop = loft.getOne(conn, id)
-    return render_template('index.html', item = prop)
+    print ("TESTING: ", prop)
+    #return render_template('index.html', item = prop)
+    return render_template('show.html', item = prop)
 
 @app.route('/edit/<id>', methods = ["GET", "POST"])
 def editPage():
     return render_template('show.html')
 
-@app.route('/profile/', methods = ["GET"])
-def profilePage():
-    return render_template('profile.html')
+@app.route('/profile/<id>', methods = ["GET"])
+def profilePage(id):
+    conn = loft.getConn('loft')
+    profile = loft.getProfile(conn, id)
+    return render_template('profile.html', profile = profile)
 
 @app.route('/delete/<id>', methods = ["DELETE"])
 def deletePage():
