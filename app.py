@@ -90,14 +90,16 @@ def showProperties():
 
 @app.route('/', methods = ["GET"])
 def homePage():
-    conn = loft.getConn('properties')
+    #conn = loft.getConn('properties')
+    conn = loft.getConn('loft')
     propList = loft.getAll(conn)
     return render_template('index.html', propList = propList)
 
 @app.route('/show/<id>', methods = ["GET"])
 def showPage(id):
-    conn = loft.getConn('properties')
-    # prop = loft.getOne(conn, id)
+    #conn = loft.getConn('properties')
+    conn = loft.getConn('loft')
+    prop = loft.getOne(conn, id)
     return render_template('index.html', item = prop)
 
 @app.route('/edit/<id>', methods = ["GET", "POST"])

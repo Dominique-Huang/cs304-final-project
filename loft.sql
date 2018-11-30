@@ -2,13 +2,18 @@
 -- Current Database: `loft`
 --
 
-use `loft`;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `loft` /*!40100 DEFAULT CHARACTER SET latin1 */;
+
+USE `loft`;
 
 /* Create tables for user and properties */
 
 drop table if exists tenants;
 drop table if exists users;
 drop table if exists properties;
+drop table if exists dates;
+drop table if exists featuresTenants;
+drop table if exists featuresProperties;
 
 create table users(
     `name` varchar(20) DEFAULT NULL,
@@ -28,7 +33,6 @@ create table tenants(
 )
 ENGINE = InnoDB;
 
-drop table if exists properties;
 create table properties(
   -- add in description
     /* how do we want to display features, gender, availability? */
@@ -43,20 +47,17 @@ create table properties(
     PRIMARY KEY (PID)
 );
 
-drop table if exists dates;
 create table dates(
     PID int(10),
     startDate date,
-    endDate date,
+    endDate date
 );
 
-drop table if exists featuresTenants;
 create table featuresTenants(
     UID int(10),
     features varchar(100)
 );
 
-drop table if exists featuresProperties;
 create table featuresProperties(
     PID int(10),
     features varchar(100)
@@ -73,7 +74,7 @@ create table host_prop(
 );
 
 INSERT INTO users VALUES ('Freddie', 'freddie@bu.edu', 'password','Boston University',1), ('Mary','mary@mit.edu', 'password','Massachusetts Institute of Technology', NULL);
-INSERT INTO tenants VALUES (0, 2, 0, 1)
-INSERT INTO properties VALUES ('Studio apartment', 'Cozy studio apartment with natural lighting', 'Central Square', 1000, 0, 3, 1, NULL), ('2BR Apartment', 'Charming retreat by Newbury street', 'Boston', 1700, 0, 3, 0, NULL), ('1 BR near Kendall','Single bedroom in apartment near Kendall Square','Kendall Square, Cambridge','1200', 1, 2, 1, NULL);
+INSERT INTO tenants VALUES (0, 2, 0, 1);
+INSERT INTO properties VALUES ('Studio apartment', 'Cozy studio with natural lighting', 'Central Square', 1000, 0, 3, 1, NULL), ('2BR Apartment', 'Charming retreat by Newbury street', 'Boston', 1700, 0, 3, 0, NULL), ('1 BR near Kendall','Single bedroom in apartment near Kendall Square','Kendall Square, Cambridge','1200', 1, 2, 1, NULL);
 -- INSERT INTO `properties` VALUES ('1 BR near Kendall','Single bedroom in apartment near Kendall Square','Kendall Square, Cambridge','1000',1), ('3 BR apartment near Central','Entire apartment include 3 BR located in Central','Central Square, Cambridge','4000',2);
 -- INSERT INTO `host_prop` VALUES (1,1), (1, 2);

@@ -73,8 +73,8 @@ def getAll(conn):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('''select * from properties''')
     return curs.fetchall()
-
-def getOne(conn):
+#
+def getOne(conn, id):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('''select * from properties where PID = %s''', (id))
     return curs.fetchone()
