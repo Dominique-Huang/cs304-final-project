@@ -40,6 +40,19 @@ def addUser():
     else:
         return render_template('account.html')
 
+    #Add bcrypt in beta
+    valid = True
+    if(name.length < 4):
+        flash("Name must be at least 4 characters long")
+        valid = False
+    if(email[-4:] != ".edu" and "@" not in email):
+        flash("Please enter a valid school email")
+        valid = False
+    if(pw != pw2):
+        flash("The pas")
+    loft.createUser(conn, name, email, school, pw)
+    return render_template('login.html')
+
 @app.route('/add-property/', methods = ["GET","POST"])
 # For first time users to create an account
 def addProperty():
@@ -75,25 +88,38 @@ def showProperties():
         lofts = loft.searchProp(conn, 3, "", 100000) #shows all properties
     return render_template('', lofts = lofts)
 
-@app.route('/home/', methods = ["GET"])
+@app.route('/', methods = ["GET"])
 def homePage():
-    conn = loft.getConn('properties')
+    #conn = loft.getConn('properties')
+    conn = loft.getConn('loft')
     propList = loft.getAll(conn)
     return render_template('index.html', propList = propList)
 
 @app.route('/show/<id>', methods = ["GET"])
+<<<<<<< HEAD
 def showPage(PID):
     conn = loft.getConn('properties')
     prop = loft.getOne(conn, PID)
     return render_template('index.html', item = prop)
+=======
+def showPage(id):
+    #conn = loft.getConn('properties')
+    conn = loft.getConn('loft')
+    prop = loft.getOne(conn, id)
+    print ("TESTING: ", prop)
+    #return render_template('index.html', item = prop)
+    return render_template('show.html', item = prop)
+>>>>>>> b5cc8b2b7a33f392bf632e857400ffc0f0e707ab
 
 @app.route('/edit/<id>', methods = ["GET", "POST"])
 def editPage():
     return render_template('show.html')
 
-@app.route('/profile/', methods = ["GET"])
-def profilePage():
-    return render_template('profile.html')
+@app.route('/profile/<id>', methods = ["GET"])
+def profilePage(id):
+    conn = loft.getConn('loft')
+    profile = loft.getProfile(conn, id)
+    return render_template('profile.html', profile = profile)
 
 @app.route('/delete/<id>', methods = ["DELETE"])
 def deletePage():
