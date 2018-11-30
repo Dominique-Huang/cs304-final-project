@@ -40,6 +40,36 @@ def addUser():
         return render_template('login.html')
     else:
         return render_template('login.html')
+=======
+def getConn(db):
+    conn =  MySQLdb.connect(host='localhost',
+                           user='root',
+                           passwd='',
+                           db=db)
+    conn.autocommit(True)
+    return conn
+
+@app.route('/login/', methods = ["POST"])
+def login():
+    conn = loft.getConn('loft')
+    name = request.form.get('name')
+    email = request.form.get('email')
+    school = request.form.get('school')
+    pw = request.form.get('pw')
+    pw2 = request.form.get('pw2')
+
+    valid = True
+    if(name.length < 4):
+        flash("Name must be at least 4 characters long")
+        valid = False
+    if(email[-4:] != ".edu" and "@" not in email):
+        flash("Please enter a valid school email")
+        valid = False
+    if(pw != pw2):
+        flash("The pas")
+    loft.createUser(conn, name, email, school, pw)
+    return render_template('login.html')
+>>>>>>> 2a65f14c4289da38ef6afe71810de179f25902e3
 
 @app.route('/properties/', methods = ["GET","POST"])
 def showProperties():
@@ -68,11 +98,15 @@ def addProperty():
 
 @app.route('/home/', methods = ["GET"])
 def homePage():
-    return render_template('index.html')
+    conn = getConn('properties')
+    propList = helper.getAll(conn)
+    return render_template('index.html', propList = propList)
 
 @app.route('/show/<id>', methods = ["GET"])
-def showPage():
-    return render_template('show.html')
+def showPage(id):
+    conn = getConn('properties')
+    prop = helper.getOne(conn, id)
+    return render_template('index.html', item = prop)
 
 @app.route('/edit/<id>', methods = ["GET", "POST"])
 def editPage():
@@ -81,6 +115,10 @@ def editPage():
 @app.route('/profile/', methods = ["GET"])
 def profilePage():
     return render_template('profile.html')
+
+@app.route('/delete/<id>', methods = ["DELETE"])
+def deletePage():
+    return render_template('show.html')
 
 if __name__ == '__main__':
     app.debug = True

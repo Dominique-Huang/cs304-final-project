@@ -64,6 +64,16 @@ def searchProp(conn, gender, location, price):
                 (gender, location, price))
     return curs.fetchall()
 
+def getAll(conn):
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''select * from properties''')
+    return curs.fetchall()
+
+def getOne(conn):
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    cure.execute('''select * from properties where PID = %s''', (id))
+    return curs.fetchone()
+
 if __name__ == '__main__':
     conn = getConn('loft')
     user = createUser(conn, 'Ally', 'ally@tufts.edu', 'Password123', 'Tufts University')
