@@ -82,9 +82,9 @@ def homePage():
     return render_template('index.html', propList = propList)
 
 @app.route('/show/<id>', methods = ["GET"])
-def showPage(id):
+def showPage(PID):
     conn = loft.getConn('properties')
-    # prop = loft.getOne(conn, id)
+    prop = loft.getOne(conn, PID)
     return render_template('index.html', item = prop)
 
 @app.route('/edit/<id>', methods = ["GET", "POST"])

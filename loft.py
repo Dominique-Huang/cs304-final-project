@@ -11,12 +11,6 @@ def getConn(db):
     conn.autocommit(True)
     return conn
 
-#def createUser(conn, name, email, school, pw):
-#    curs = conn.cursor(MySQLdb.cursors.DictCursor)
-#    curs.execute('''insert into `users` values (%s, %s, &s, %s)''', 
-#                (name, email, school, pw,))
-#    return curs.fetchone()
-
 #--Adding to Database-- 
 def createUser(conn, name, email, pw, university):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
@@ -24,7 +18,7 @@ def createUser(conn, name, email, pw, university):
                 (name, email, pw, university,))
     return curs.fetchone()
     
-def createProperty(conn, descrip, name, loc, price, smoker, gender, pet):
+def createProperty(conn, name, descrip, loc, price, smoker, gender, pet):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('''insert into properties values (%s, %s, %s, %s, %s, %s, %s, NULL)''', 
                 (name, descrip, loc, price, smoker, gender, pet,))
@@ -64,6 +58,20 @@ def searchProp(conn, gender, location, price):
                 (gender, location, price))
     return curs.fetchall()
 
+#updating table values
+def updateUser(conn, UID, name, email, pw, university):
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''update users set name = %s, email = %s, pw = %s, university = %s where UID = %s''', 
+                (name, email, pw, university, UID))
+    return curs.fetchone
+
+def updateProperty(conn, PID, name, descrip, loc, price, smoker, gender, pet):
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''update properties set name = %s, descrip = %s, loc = %s, price = %s, smoker = %s, gender = %s, pet = %s where PID = %s''', 
+                (name, descrip, loc, price, smoker, gender, pet, PID))
+    return curs.fetchone
+
+#retrieves last property created based on largest PID value
 def getLastProperty(conn):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('''select * from properties where PID = (select max(PID) from properties)''')
@@ -74,9 +82,9 @@ def getAll(conn):
     curs.execute('''select * from properties''')
     return curs.fetchall()
 
-def getOne(conn):
+def getOne(conn, PID):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('''select * from properties where PID = %s''', (id))
+    curs.execute('''select * from properties where PID = %s''', (PID))
     return curs.fetchone()
 
 if __name__ == '__main__':
