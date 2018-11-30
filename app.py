@@ -10,7 +10,6 @@ app.secret_key = "Mb.Jp2u/6XT/)b`."
 # For first time users to create an account
 # Would need to create an extra section for tenants
 def addUser():
-    
     if request.method == 'POST':
         conn = loft.getConn('loft')
         name = request.form.get('name')
@@ -19,8 +18,8 @@ def addUser():
         pw = request.form.get('pw')
         pw2 = request.form.get('pw_confirm')
         
-        print(any(char.isdigit() for char in pw))
-        valid = True
+        # print(any(char.isdigit() for char in pw))
+        # valid = True
         if(len(name) < 4):
             flash("Name must be at least 4 characters long")
             valid = False
@@ -37,39 +36,32 @@ def addUser():
         # print valid
         if valid == True:
             loft.createUser(conn, name, email, school, pw)
-        return render_template('login.html')
+        return render_template('account.html')
     else:
-        return render_template('login.html')
-=======
-def getConn(db):
-    conn =  MySQLdb.connect(host='localhost',
-                           user='root',
-                           passwd='',
-                           db=db)
-    conn.autocommit(True)
-    return conn
+        return render_template('account.html')
 
-@app.route('/login/', methods = ["POST"])
-def login():
-    conn = loft.getConn('loft')
-    name = request.form.get('name')
-    email = request.form.get('email')
-    school = request.form.get('school')
-    pw = request.form.get('pw')
-    pw2 = request.form.get('pw2')
-
-    valid = True
-    if(name.length < 4):
-        flash("Name must be at least 4 characters long")
-        valid = False
-    if(email[-4:] != ".edu" and "@" not in email):
-        flash("Please enter a valid school email")
-        valid = False
-    if(pw != pw2):
-        flash("The pas")
-    loft.createUser(conn, name, email, school, pw)
-    return render_template('login.html')
->>>>>>> 2a65f14c4289da38ef6afe71810de179f25902e3
+@app.route('/add-property/', methods = ["GET","POST"])
+# For first time users to create an account
+def addProperty():
+    if request.method == 'POST':
+        conn = loft.getConn('loft')
+        name = request.form.get('name')
+        descrip = request.form.get('descrip')
+        loc = request.form.get('location')
+        price = request.form.get('price')
+        smoker = request.form.get('smoker')
+        gender = request.form.get('gender')
+        pet = request.form.get('pet')
+        
+        loft.createProperty(conn, name, descrip, loc, price, smoker, gender, pet)
+        
+        PID = loft.getLastProperty(conn)['PID']
+        start = request.form.get('start_date') #as of now, assuming there is only one time period
+        end = request.form.get('end_Date')
+        
+        loft.createDate(conn, PID, start, end)
+    else:
+        return
 
 @app.route('/properties/', methods = ["GET","POST"])
 def showProperties():
@@ -82,30 +74,17 @@ def showProperties():
     else: 
         lofts = loft.searchProp(conn, 3, "", 100000) #shows all properties
     return render_template('', lofts = lofts)
-    
-@app.route('/add-property/', methods = ["POST"])
-# For first time users to create an account
-def addProperty():
-    conn = loft.getConn('loft')
-    name = request.form.get('name')
-    loc = request.form.get('location')
-    price = request.form.get('price')
-    smoker = request.form.get('smoker')
-    gender = request.form.get('gender')
-    pet = request.form.get('pet')
-    
-    loft.createProperty(conn, name, loc, price, smoker, gender, pet)
 
 @app.route('/home/', methods = ["GET"])
 def homePage():
-    conn = getConn('properties')
-    propList = helper.getAll(conn)
+    conn = loft.getConn('properties')
+    propList = loft.getAll(conn)
     return render_template('index.html', propList = propList)
 
 @app.route('/show/<id>', methods = ["GET"])
 def showPage(id):
-    conn = getConn('properties')
-    prop = helper.getOne(conn, id)
+    conn = loft.getConn('properties')
+    # prop = loft.getOne(conn, id)
     return render_template('index.html', item = prop)
 
 @app.route('/edit/<id>', methods = ["GET", "POST"])
