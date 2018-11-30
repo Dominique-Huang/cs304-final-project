@@ -73,8 +73,10 @@ def addProperty():
         end = request.form.get('end_Date')
         
         loft.createDate(conn, PID, start, end)
+        
+        return render_template('X.html')
     else:
-        return
+        return render_template('X.html')
 
 @app.route('/properties/', methods = ["GET","POST"])
 def showProperties():
@@ -95,13 +97,6 @@ def homePage():
     propList = loft.getAll(conn)
     return render_template('index.html', propList = propList)
 
-@app.route('/show/<id>', methods = ["GET"])
-<<<<<<< HEAD
-def showPage(PID):
-    conn = loft.getConn('properties')
-    prop = loft.getOne(conn, PID)
-    return render_template('index.html', item = prop)
-=======
 def showPage(id):
     #conn = loft.getConn('properties')
     conn = loft.getConn('loft')
@@ -109,7 +104,6 @@ def showPage(id):
     print ("TESTING: ", prop)
     #return render_template('index.html', item = prop)
     return render_template('show.html', item = prop)
->>>>>>> b5cc8b2b7a33f392bf632e857400ffc0f0e707ab
 
 @app.route('/edit/<id>', methods = ["GET", "POST"])
 def editPage():
