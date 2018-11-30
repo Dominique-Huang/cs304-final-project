@@ -18,16 +18,16 @@ def getConn(db):
 #    return curs.fetchone()
 
 #--Adding to Database-- 
-def createUser(conn, name, email, school, pw):
+def createUser(conn, name, email, pw, university):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('''insert into users values (%s, %s, &s, %s, NULL)''', 
-                (name, email, school, pw,))
+    curs.execute('''insert into users values (%s, %s, %s, %s, NULL)''',
+                (name, email, pw, university,))
     return curs.fetchone()
     
-def createProperty(conn, name, loc, price, smoker, gender, pet):
+def createProperty(conn, descrip, name, loc, price, smoker, gender, pet):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('''insert into properties values (%s, %s, &s, %s, %s, %s, NULL)''', 
-                (name, loc, price, smoker, gender, pet,))
+    curs.execute('''insert into properties values (%s, %s, %s, %s, %s, %s, %s, NULL)''', 
+                (name, descrip, loc, price, smoker, gender, pet,))
     return curs.fetchone()
 
 def createDate(conn, PID, start, end):
@@ -64,5 +64,22 @@ def searchProp(conn, gender, location, price):
                 (gender, location, price))
     return curs.fetchall()
 
+def getLastProperty(conn):
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''select * from properties where PID = (select max(PID) from properties)''')
+    return curs.fetchone()
+
+def getAll(conn):
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''select * from properties''')
+    return curs.fetchall()
+
+def getOne(conn):
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''select * from properties where PID = %s''', (id))
+    return curs.fetchone()
+
 if __name__ == '__main__':
     conn = getConn('loft')
+    # user = createUser(conn, 'Ally', 'ally@tufts.edu', 'Password123', 'Tufts University')
+    prop = createProperty(conn, 'House', 'A House in Boston', 'Boston', 800, 0, 1, 0)
