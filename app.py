@@ -42,19 +42,6 @@ def addUser():
     else:
         return render_template('account.html')
 
-    #Add bcrypt in beta
-    # valid = True
-    # if(name.length < 4):
-    #     flash("Name must be at least 4 characters long")
-    #     valid = False
-    # if(email[-4:] != ".edu" and "@" not in email):
-    #     flash("Please enter a valid school email")
-    #     valid = False
-    # if(pw != pw2):
-    #     flash("The pas")
-    # loft.createUser(conn, name, email, school, pw)
-    # return render_template('login.html')
-
 @app.route('/add-property/', methods = ["GET","POST"])
 # For first time users to create an account
 def addProperty():
@@ -67,16 +54,16 @@ def addProperty():
         smoker = request.form.get('smoker')
         gender = request.form.get('gender')
         pet = request.form.get('pet')
-        
+        print((conn, name, descrip, loc, price, smoker, gender, pet))
         loft.createProperty(conn, name, descrip, loc, price, smoker, gender, pet)
         
-        PID = loft.getLastProperty(conn)['PID']
-        start = request.form.get('start_date') #as of now, assuming there is only one time period
-        end = request.form.get('end_Date')
+        # PID = loft.getLastProperty(conn)['PID']
+        # start = request.form.get('start_date') #as of now, assuming there is only one time period
+        # end = request.form.get('end_Date')
         
-        loft.createDate(conn, PID, start, end)
+        # loft.createDate(conn, PID, start, end)
         
-        return render_template('index.html')
+        return redirect(url_for('showProperties'))
     else:
         return render_template('addProp.html')
 
@@ -87,12 +74,12 @@ def showProperties():
         gender = int(request.form.get('gender'))
         location = request.form.get('location')
         price = request.form.get('price') #might use price ranges in the future
-        if price == "":
-            price = 100000 #no upper limit
+        # THIS DOESN'T REALLY MAKE SENSE
+        # if price == "":
+        #     price = 100000 #no upper limit
         propList = loft.searchProp(conn, gender, location, price)
     else: 
-        propList = loft.searchProp(conn, 3, "", 100000) #shows all properties
-    
+        propList = loft.getAll(conn) #shows all properties
     return render_template('index.html', propList = propList)
 
 @app.route('/show/<id>', methods = ["GET"])
