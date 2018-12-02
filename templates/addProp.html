@@ -18,27 +18,27 @@
         <div class="card border-dark mb-3" style="max-width: 40rem;">
         <div style="padding: 30px;">
           <div class="card-header">Create New Property</div>
-            <form>
+            <form method = "POST" action = "{{ url_for('addProperty') }}">
                 <!--name = request.form.get('name')-->
                 <div class="form-group">
                     <label for="name">Name</label>
-                    <input type="text" class="form-control" id="name" aria-describedby="name of property" placeholder="Enter name">
+                    <input type="text" class="form-control" name="name" aria-describedby="name of property" placeholder="Enter name">
                     <!--<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>-->
                 </div>
                 <!--descrip = request.form.get('descrip')-->
                 <div class="form-group">
                     <label for="descrip">Description</label>
-                    <textarea class="form-control" id="descrip" rows="3" placeholder="Describe your property"></textarea>
+                    <textarea class="form-control" name="descrip" rows="3" placeholder="Describe your property"></textarea>
                 </div>
                 <!--loc = request.form.get('location')-->
                 <div class="form-group">
                     <label for="location">Location</label>
-                    <input type="text" class="form-control" id="location" aria-describedby="enter location" placeholder="Enter your property location">
+                    <input type="text" class="form-control" name="location" aria-describedby="enter location" placeholder="Enter your property location">
                 </div>
                 <!--price = request.form.get('price')-->
                 <div class="form-group">
                     <label for="price">Price Per Month</label>
-                    <input type="number" class="form-control" id="price" aria-describedby="enter price" placeholder="Enter price">
+                    <input type="number" class="form-control" name="price" aria-describedby="enter price" placeholder="Enter price">
                 </div>
                 <!--smoker = request.form.get('smoker')-->
                 <fieldset class="form-group">

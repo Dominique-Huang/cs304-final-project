@@ -18,11 +18,11 @@ def addUser():
         pw = request.form.get('pw')
         pw2 = request.form.get('pw_confirm')
         valid = True
-        # print(any(char.isdigit() for char in pw))
-        # valid = True
-        if(len(name) < 4):
-            flash("Name must be at least 4 characters long")
-            valid = False
+        
+        # NOT ALL NAMES ARE LONGER THAN 4
+        # if(len(name) < 4):
+        #     flash("Name must be at least 4 characters long")
+        #     valid = False
         if(email[-4:] != ".edu" or "@" not in email):
             flash("Please enter a valid school email")
             valid = False
@@ -35,25 +35,12 @@ def addUser():
         
         # print valid
         if valid == True:
-            loft.createUser(conn, name, email, school, pw)
-            return redirect(url_for('homePage'))
+            loft.createUser(conn, name, email, pw, school)
+            return redirect(url_for('showProperties'))
         else:
             return render_template('account.html')
     else:
         return render_template('account.html')
-
-    #Add bcrypt in beta
-    # valid = True
-    # if(name.length < 4):
-    #     flash("Name must be at least 4 characters long")
-    #     valid = False
-    # if(email[-4:] != ".edu" and "@" not in email):
-    #     flash("Please enter a valid school email")
-    #     valid = False
-    # if(pw != pw2):
-    #     flash("The pas")
-    # loft.createUser(conn, name, email, school, pw)
-    # return render_template('login.html')
 
 @app.route('/add-property/', methods = ["GET","POST"])
 # For first time users to create an account
@@ -67,18 +54,18 @@ def addProperty():
         smoker = request.form.get('smoker')
         gender = request.form.get('gender')
         pet = request.form.get('pet')
-        
+        print((conn, name, descrip, loc, price, smoker, gender, pet))
         loft.createProperty(conn, name, descrip, loc, price, smoker, gender, pet)
         
-        PID = loft.getLastProperty(conn)['PID']
-        start = request.form.get('start_date') #as of now, assuming there is only one time period
-        end = request.form.get('end_Date')
+        # PID = loft.getLastProperty(conn)['PID']
+        # start = request.form.get('start_date') #as of now, assuming there is only one time period
+        # end = request.form.get('end_Date')
         
-        loft.createDate(conn, PID, start, end)
+        # loft.createDate(conn, PID, start, end)
         
-        return render_template('X.html')
+        return redirect(url_for('showProperties'))
     else:
-        return render_template('X.html')
+        return render_template('addProp.html')
 
 @app.route('/', methods = ["GET","POST"])
 def showProperties():
@@ -87,12 +74,12 @@ def showProperties():
         gender = int(request.form.get('gender'))
         location = request.form.get('location')
         price = request.form.get('price') #might use price ranges in the future
-        if price == "":
-            price = 100000 #no upper limit
+        # THIS DOESN'T REALLY MAKE SENSE
+        # if price == "":
+        #     price = 100000 #no upper limit
         propList = loft.searchProp(conn, gender, location, price)
     else: 
-        propList = loft.searchProp(conn, 3, "", 100000) #shows all properties
-    
+        propList = loft.getAll(conn) #shows all properties
     return render_template('index.html', propList = propList)
 
 @app.route('/show/<id>', methods = ["GET"])
@@ -104,19 +91,19 @@ def showPage(id):
     #return render_template('index.html', item = prop)
     return render_template('show.html', item = prop)
 
-@app.route('/edit/<id>', methods = ["GET", "POST"])
-def editPage():
-    return render_template('show.html')
-
 @app.route('/profile/<id>', methods = ["GET"])
 def profilePage(id):
     conn = loft.getConn('loft')
     profile = loft.getProfile(conn, id)
     return render_template('profile.html', profile = profile)
 
-@app.route('/delete/<id>', methods = ["DELETE"])
-def deletePage():
-    return render_template('show.html')
+@app.route('/edit/<id>', methods = ["GET", "POST"])
+def editPage(id):
+    return render_template('index.html')
+    
+@app.route('/delete/<id>', methods = ["POST"])
+def deletePage(id):
+    return render_template('index.html')
 
 if __name__ == '__main__':
     app.debug = True
