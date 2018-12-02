@@ -1,0 +1,43 @@
+<!--Purpose: Show a more detailed view of an individual space-->
+<!--Purpose: display the individual user's profile/settings page-->
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name=author content="">
+    <meta name=description content="">
+    <meta name=keywords content="">
+    <title></title>
+    <!-- css stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+    <!-- fonts -->
+</head>
+
+<body>
+      <div align = "center">
+          <!-- Change the border color -->
+          <div href='/show/{{item.PID}}' class="">
+            <div class="card border-dark mb-3" data-id={{item.PID}} style="max-width: 40rem;">
+              <div style="padding: 30px;">
+                <div class="card-header">{{item.propName}}</div>
+                
+                <img class="card-img-top" src="..." alt="Card image cap">
+                <div class="card-body text-dark">
+                  <h5 class="card-text">{{item.propDescription}}</h5>
+                  <p class="card-text">{{item.propLocation}}</p>
+                  <p class="card-text">{{item.propPrice}}</p>
+                </div>
+                <div>
+                  
+                  <a href='/edit/{{item.PID}}' type="button" class="btn btn-dark">Edit</a>
+                  <a href='/delete/{{item.PID}}' type="button" class="btn btn-dark">Delete</a>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+
+</body>
+
+</html>

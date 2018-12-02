@@ -1,0 +1,615 @@
+import loft
+
+from flask import (Flask, url_for, redirect, request, render_template, flash)
+
+app = Flask(__name__)
+
+app.secret_key = "Mb.Jp2u/6XT/)b`."
+
+@app.route('/start/', methods = ['POST', 'GET'])
+# For first time users to create an account
+# Would need to create an extra section for tenants
+def addUser():
+    if request.method == 'POST':
+        conn = loft.getConn('loft')
+        name = request.form.get('name')
+        email = request.form.get('email')
+        school = request.form.get('school')
+        pw = request.form.get('pw')
+        pw2 = request.form.get('pw_confirm')
+        valid = True
+        
+        if(email[-4:] != ".edu" or "@" not in email):
+            flash("Please enter a valid school email")
+            valid = False
+        if(pw != pw2):
+            flash("The passwords do not match")
+            valid = False
+        elif (len(pw) < 6 or any(char.isdigit() for char in pw) == False): #only checks when passwords match
+            flash("Password is too weak, must be longer than 6 characters and contain a digit")
+            valid = False
+        
+        # print valid
+        if valid == True:
+            loft.createUser(conn, name, email, pw, school)
+            return redirect(url_for('showProperties'))
+        else:
+            return render_template('account.html')
+    else:
+        return render_template('account.html')
+
+@app.route('/add-property/', methods = ["GET","POST"])
+# For first time users to create an account
+def addProperty():
+    if request.method == 'POST':
+        conn = loft.getConn('loft')
+        name = request.form.get('name')
+        descrip = request.form.get('descrip')
+        loc = request.form.get('location')
+        price = request.form.get('price')
+        smoker = request.form.get('smoker')
+        gender = request.form.get('gender')
+        pet = request.form.get('pet')
+        loft.createProperty(conn, name, descrip, loc, price, smoker, gender, pet)
+        
+        # PID = loft.getLastProperty(conn)['PID']
+        # start = request.form.get('start_date') #as of now, assuming there is only one time period
+        # end = request.form.get('end_Date')
+        
+        # loft.createDate(conn, PID, start, end)
+        
+        return redirect(url_for('showProperties'))
+    else:
+        return render_template('addProp.html')
+
+@app.route('/', methods = ["GET","POST"])
+def showProperties():
+    conn = loft.getConn('loft')
+    if request.method == 'POST':
+        gender = int(request.form.get('gender'))
+        location = request.form.get('location')
+        price = request.form.get('price') #might use price ranges in the future
+        if price == "":
+            price = 100000 #no upper limit
+        propList = loft.searchProp(conn, gender, location, price)
+    else: 
+        propList = loft.getAll(conn) #shows all properties
+    return render_template('index.html', propList = propList)
+
+@app.route('/show/<id>', methods = ["GET"])
+def showPage(id):
+    #conn = loft.getConn('properties')
+    conn = loft.getConn('loft')
+    prop = loft.getOne(conn, id)
+    print ("TESTING: ", prop)
+    #return render_template('index.html', item = prop)
+    return render_template('show.html', item = prop)
+
+@app.route('/profile/<id>', methods = ["GET"])
+def profilePage(id):
+    conn = loft.getConn('loft')
+    profile = loft.getProfile(conn, id)
+    return render_template('profile.html', profile = profile)
+
+@app.route('/edit/<id>', methods = ["GET", "POST"])
+def editPage(id):
+    return render_template('index.html')
+    
+@app.route('/delete/<id>', methods = ["POST"])
+def deletePage(id):
+    return render_template('index.html')
+
+if __name__ == '__main__':
+    app.debug = True
+    app.run('0.0.0.0',8081)
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name=author content="">
+    <meta name=description content="">
+    <meta name=keywords content="">
+    <title></title>
+    <!-- css stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+    <!-- fonts -->
+</head>
+<body>
+    <!--display all flashed messages-->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div id="messages">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    <!-- Form to create a user -->
+  <!--  <form method = "POST" action = "{{ url_for('addUser') }}">-->
+  <!--      <p><label>Name: <input name = "name"></label></p>-->
+  <!--      <p><label>University Email: <input name = "email" ></label></p>-->
+  <!--      <p><label>University: <input name = "school"></label></p>-->
+  <!--      <p><label>Password: <input name = "pw" type = "password"></label></p>-->
+  <!--      <p><label>Re-enter Password: <input name = "pw_confirm" type = "password"></label></p>-->
+  <!--      <p><button class = "sign_up" type = "submit">Sign Up</button></p>-->
+  <!--</form>-->
+  <div align="center">
+        <div class="card border-dark mb-3" style="max-width: 40rem;">
+        <div style="padding: 30px;">
+          <div class="card-header">Create New User Profile</div>
+            <form method = "POST" action = "{{ url_for('addUser') }}">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" name="name" aria-describedby="name of person" placeholder="Enter name">
+                    <small class="form-text text-muted">Name must be at least 4 characters long</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">University Email </label>
+                    <input type="text" class="form-control" name="email" aria-describedby="email of person" placeholder="Enter university email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="school">University</label>
+                    <input type="text" class="form-control" name="school" aria-describedby="school of person" placeholder="Enter university">
+                </div>
+                
+                <div class="form-group">
+                    <label for="pw">Password</label>
+                    <input type="password" class="form-control" name="pw" aria-describedby="password" placeholder="Enter password">
+                    <small class="form-text text-muted">Password must be longer than 6 characters and contain a digit</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="pw_confirm">Re-enter Password</label>
+                    <input type="password" class="form-control" name="pw_confirm" aria-describedby="password" placeholder="Re-enter password">
+                </div>
+                
+              <button type="submit" class="btn btn-primary sign_up">Sign Up</button>
+            </form>
+        </div>
+        </div>
+     </div>
+    </div>
+
+</body>
+
+</html>
+<!--Purpose: Add a property form-->
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name=author content="">
+    <meta name=description content="">
+    <meta name=keywords content="">
+    <title></title>
+    <!-- css stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+    <!-- fonts -->
+</head>
+
+<body>
+    <div align="center">
+        <div class="card border-dark mb-3" style="max-width: 40rem;">
+        <div style="padding: 30px;">
+          <div class="card-header">Create New Property</div>
+            <form method = "POST" action = "{{ url_for('addProperty') }}">
+                <!--name = request.form.get('name')-->
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" name="name" aria-describedby="name of property" placeholder="Enter name">
+                    <!--<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>-->
+                </div>
+                <!--descrip = request.form.get('descrip')-->
+                <div class="form-group">
+                    <label for="descrip">Description</label>
+                    <textarea class="form-control" name="descrip" rows="3" placeholder="Describe your property"></textarea>
+                </div>
+                <!--loc = request.form.get('location')-->
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <input type="text" class="form-control" name="location" aria-describedby="enter location" placeholder="Enter your property location">
+                </div>
+                <!--price = request.form.get('price')-->
+                <div class="form-group">
+                    <label for="price">Price Per Month</label>
+                    <input type="number" class="form-control" name="price" aria-describedby="enter price" placeholder="Enter price">
+                </div>
+                <!--smoker = request.form.get('smoker')-->
+                <fieldset class="form-group">
+                <label for="smoker">Is your property smoker friendly?</label>
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="smoker" id="smokerYes" value="1">
+                    Yes
+                  </label>
+                </div>
+                <div class="form-check">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="smoker" id="smokerNo" value="0">
+                        No
+                    </label>
+                </div>
+                </fieldset>
+                <!--gender = request.form.get('gender')-->
+                <fieldset class="form-group">
+                <label for="gender">Do you have a preferred gender?</label>
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="gender" id="gender1" value="1">
+                    All female
+                  </label>
+                </div>
+                <div class="form-check">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="gender" id="gender2" value="2">
+                    All male
+                 </label>
+                </div>
+                <div class="form-check">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="gender" id="gender3" value="3">
+                    Other
+                  </label>
+                </div>
+              </fieldset>
+                <!--pet = request.form.get('pet')-->
+                <fieldset class="form-group">
+                <label for="pet">Is your property pet friendly?</label>
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="pet" id="petYes" value="1">
+                    Yes
+                  </label>
+                </div>
+                <div class="form-check">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="pet" id="petNo" value="0">
+                        No
+                    </label>
+                </div>
+              </fieldset>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+        </div>
+     </div>
+    </div>
+
+</body>
+
+</html>
+<!--Purpose: display list of all available spaces-->
+<!--Purpose: display the individual user's profile/settings page-->
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name=author content="">
+    <meta name=description content="">
+    <meta name=keywords content="">
+    <title>Home</title>
+    <!-- css stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous" type="text/css">
+    <link rel="stylesheet" href="/static/app.css" type="text/css">
+    <!-- fonts -->
+</head>
+
+<body>
+  <form method = "POST" action = "{{ url_for('showProperties') }}">
+    <p>Filter by: </p>
+    <div class="form-inline">
+      <div class="form-group">
+        <label for="gender">Gender: </label>
+        <select name = 'gender'>
+        <option value = 1>Female</option>
+        <option value = 2>Male</option>
+        <option value = 3>Other</option>
+        <option value = 3>Any</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="location">Location: </label><input type="text" class="filter" name="location" placeholder="Enter Location">
+      </div>
+      <div class="form-group">
+        <label for="price">Max Price: </label><input type="number" class="filter" name="price" placeholder="Enter maximum price per month">
+      </div>
+      <div class="form-group">
+        <button type = "submit">Submit</button>
+      </div>
+    </div>
+  </form>
+  
+  
+  <div>
+      {% for item in propList%}
+        <div align = "center">
+          <!-- Change the border color -->
+          <div class="col-lg-3 col-sm-6 ">
+            <a href='/show/{{item.PID}}' class="card border-dark mb-3" data-id={{item.PID}} style="max-width: 18rem;">
+              <div style="padding: 30px;">
+                <div class="card-header">{{item.propName}}</div>
+                
+                <img class="card-img-top" src="..." alt="Card image cap">
+                <div class="card-body text-dark">
+                  <h5 class="card-text">{{item.propDescription}}</h5>
+                  <p class="card-text">{{item.propLocation}}</p>
+                  <p class="card-text">{{item.propPrice}}</p>
+                </div>
+                
+              </div>
+            </a>
+          </div>
+        </div>
+      {% endfor %}
+  </div>
+  
+
+</body>
+
+</html>
+
+<!--Purpose: display the individual user's profile/settings page-->
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name=author content="">
+    <meta name=description content="">
+    <meta name=keywords content="">
+    <title></title>
+    <!-- css stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+    <!-- fonts -->
+</head>
+
+<body>
+
+    <div id="contentContainer">
+    <h1>{{profile.name}}</h1>
+    <p>{{profile.university}}
+    <p>{{profile.email}}</p>
+    
+
+    </div>
+</body>
+
+</html>
+<!--Purpose: Show a more detailed view of an individual space-->
+<!--Purpose: display the individual user's profile/settings page-->
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name=author content="">
+    <meta name=description content="">
+    <meta name=keywords content="">
+    <title></title>
+    <!-- css stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+    <!-- fonts -->
+</head>
+
+<body>
+      <div align = "center">
+          <!-- Change the border color -->
+          <div href='/show/{{item.PID}}' class="">
+            <div class="card border-dark mb-3" data-id={{item.PID}} style="max-width: 40rem;">
+              <div style="padding: 30px;">
+                <div class="card-header">{{item.propName}}</div>
+                
+                <img class="card-img-top" src="..." alt="Card image cap">
+                <div class="card-body text-dark">
+                  <h5 class="card-text">{{item.propDescription}}</h5>
+                  <p class="card-text">{{item.propLocation}}</p>
+                  <p class="card-text">{{item.propPrice}}</p>
+                </div>
+                <div>
+                  
+                  <a href='/edit/{{item.PID}}' type="button" class="btn btn-dark">Edit</a>
+                  <a href='/delete/{{item.PID}}' type="button" class="btn btn-dark">Delete</a>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+
+</body>
+
+</html>
+#!/usr/bin/python2.7
+
+import sys
+import MySQLdb
+
+def getConn(db):
+    conn =  MySQLdb.connect(host='localhost',
+                           user='root',
+                           passwd='',
+                           db=db)
+    conn.autocommit(True)
+    return conn
+
+#--Adding to Database-- 
+def createUser(conn, name, email, pw, university):
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''insert into users values (%s, %s, %s, %s, NULL)''',
+                (name, email, pw, university,))
+    return curs.fetchone()
+    
+def createProperty(conn, name, descrip, loc, price, smoker, gender, pet):
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''insert into properties values (%s, %s, %s, %s, %s, %s, %s, NULL)''', 
+                (name, descrip, loc, price, smoker, gender, pet,))
+    return curs.fetchone()
+
+def createDate(conn, PID, start, end):
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''insert into dates values (%s, %s, %s)''',
+                (PID, start, end,))
+    return curs.fetchone()
+
+def addTenantFeature(conn, UID, feature):
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''insert into featuresTenants values (%s, %s)''',
+                (UID, feature,))
+    return curs.fetchone()
+
+def addPropertyFeature(conn, PID, feature):
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''insert into featuresProperties values (%s, %s)''',
+                (PID, feature,))
+    return curs.fetchone()
+    
+def addHostProp(conn, UID, PID):
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''insert into host_prop values (%s, %s)''',
+                (UID, PID,))
+    return curs.fetchone()
+
+# Searching properties based on specific filters
+def searchProp(conn, gender, location, price):
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    location = "%" + location + "%"
+    if (gender == 3): #no preference
+        curs.execute('''select * from properties where propLocation like %s and propPrice < %s''',
+                    (location, price))
+    else:
+        curs.execute('''select * from properties where propGender in (%s) and propLocation like %s and propPrice < %s''',
+                    (gender, location, price))
+    return curs.fetchall()
+
+#updating table values
+def updateUser(conn, UID, name, email, pw, university):
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''update users set name = %s, email = %s, pw = %s, university = %s where UID = %s''', 
+                (name, email, pw, university, UID))
+    return curs.fetchone
+
+def updateProperty(conn, PID, name, descrip, loc, price, smoker, gender, pet):
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''update properties set name = %s, descrip = %s, loc = %s, price = %s, smoker = %s, gender = %s, pet = %s where PID = %s''', 
+                (name, descrip, loc, price, smoker, gender, pet, PID))
+    return curs.fetchone
+
+#retrieves last property created based on largest PID value
+def getLastProperty(conn):
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''select * from properties where PID = (select max(PID) from properties)''')
+    return curs.fetchone()
+
+def getAll(conn):
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''select * from properties''')
+    return curs.fetchall()
+
+def getOne(conn, id):
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''select * from properties where PID = %s''', [id])
+    return curs.fetchone()
+    
+def getProfile(conn, id):
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''select * from users where UID = %s''', [id])
+    return curs.fetchone()
+
+if __name__ == '__main__':
+    conn = getConn('loft')
+    # user = createUser(conn, 'Ally', 'ally@tufts.edu', 'Password123', 'Tufts University')
+    # prop = createProperty(conn, 'House', 'A House in Boston', 'Boston', 800, 0, 1, 0)
+    print(searchProp(conn,3,'Cambridge',10000))--
+-- Current Database: `loft`
+--
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `loft` /*!40100 DEFAULT CHARACTER SET latin1 */;
+
+USE `loft`;
+
+/* Create tables for user and properties */
+
+drop table if exists tenants;
+drop table if exists users;
+drop table if exists properties;
+drop table if exists dates;
+drop table if exists featuresTenants;
+drop table if exists featuresProperties;
+
+create table users(
+    `name` varchar(20) DEFAULT NULL,
+    `email` varchar(30) DEFAULT NULL,
+    `pw` varchar(60) DEFAULT NULL,
+    `university` varchar(40) DEFAULT NULL,
+    UID int(15) unsigned NOT NULL AUTO_INCREMENT,
+    PRIMARY KEY (UID)
+);
+
+create table tenants(
+    smoker bit DEFAULT 0, /*1 if smoker, 0 if not*/
+    gender int(1) DEFAULT 0, /*1 for female, 2 for male, 3 for other*/
+    pet bit DEFAULT 0, /*1 if has pet, 0 if not*/
+    UID int(15) unsigned,
+    foreign key (UID) references users(UID) on delete cascade on update cascade
+)
+ENGINE = InnoDB;
+
+create table properties(
+  -- add in description
+    /* how do we want to display features, gender, availability? */
+    `propName` varchar(100) DEFAULT NULL,
+    `propDescription` varchar(100) DEFAULT NULL,
+    `propLocation` varchar(150) DEFAULT NULL,
+    `propPrice` int(10) unsigned DEFAULT NULL,
+    `propSmoker` int(1) DEFAULT NULL, /*1 if okay with smoker, 0 if not*/
+    `propGender` int(1) DEFAULT NULL, /*1 if female only, 2 if male only, 3 if no preference*/
+    `propPet` int(1) DEFAULT NULL, /*1 if okay with pet, 0 if not*/
+    `PID` int(10) unsigned NOT NULL AUTO_INCREMENT,
+    PRIMARY KEY (PID)
+);
+
+create table dates(
+    PID int(10),
+    startDate date,
+    endDate date
+);
+
+create table featuresTenants(
+    UID int(10),
+    features varchar(100)
+);
+
+create table featuresProperties(
+    PID int(10),
+    features varchar(100)
+);
+
+/* Map relationships*/
+
+-- table to map one to many relationship of hosts and properties
+drop table if exists host_prop;
+create table host_prop(
+    UID int,
+    PID int,
+    primary key (UID, PID)
+);
+
+INSERT INTO users VALUES ('Freddie', 'freddie@bu.edu', 'password','Boston University',1), ('Mary','mary@mit.edu', 'password','Massachusetts Institute of Technology', NULL);
+INSERT INTO tenants VALUES (0, 2, 0, 1);
+INSERT INTO properties VALUES ('Studio apartment', 'Cozy studio with natural lighting', 'Central Square', 1000, 0, 3, 1, NULL), ('2BR Apartment', 'Charming retreat by Newbury street', 'Boston', 1700, 0, 3, 0, NULL), ('1 BR near Kendall','Single bedroom in apartment near Kendall Square','Kendall Square, Cambridge','1200', 1, 2, 1, NULL);
+-- INSERT INTO `properties` VALUES ('1 BR near Kendall','Single bedroom in apartment near Kendall Square','Kendall Square, Cambridge','1000',1), ('3 BR apartment near Central','Entire apartment include 3 BR located in Central','Central Square, Cambridge','4000',2);
+-- INSERT INTO `host_prop` VALUES (1,1), (1, 2);
+a.card {
+  color: #212529;
+  text-decoration: none;
+}
+
+a.card:hover {
+  color: #6959cd;
+  text-decoration: none;
+}
