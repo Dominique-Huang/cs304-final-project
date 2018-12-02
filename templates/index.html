@@ -31,66 +31,23 @@
   </form>
   <div>
       {% for item in propList%}
-        <!-- Change the border color -->
-        <div class="col-l-3 col-sm-6">
-        <div class="card border-dark mb-3" data-id={{item.PID}} style="max-width: 18rem;">
-          <div class="card-header">{{item.propName}}</div>
-          <img class="card-img-top" src="..." alt="Card image cap">
-          <div class="card-body text-dark">
-            <h5 class="card-title">{{item.propDescription}}</h5>
-            <p class="card-text">{{item.propLocation}}</p>
-            <p class="card-text">{{item.propPrice}}</p>
+        <div align = "center">
+          <!-- Change the border color -->
+          <div class="col-lg-3 col-sm-6 ">
+          <div class="card border-dark mb-3" data-id={{item.PID}} style="max-width: 18rem;">
+            <div style="padding: 30px;">
+              <div class="card-header">{{item.propName}}</div>
+              <img class="card-img-top" src="..." alt="Card image cap">
+              <div class="card-body text-dark">
+              <h5 class="card-text">{{item.propDescription}}</h5>
+              <p class="card-text">{{item.propLocation}}</p>
+              <p class="card-text">{{item.propPrice}}</p>
+            </div>
+            </div>
+            </div>
           </div>
-        </div>
-        </div>
       {% endfor %}
     </div>
-
-      <!-- <div class="row text-center">
-        <div class="col-l-3 col-sm-6">
-        <div class="card border-dark mb-3" style="max-width: 18rem;">
-          <div class="card-header">Name</div>
-          <img class="card-img-top" src="..." alt="Card image cap">
-          <div class="card-body text-dark">
-            <h5 class="card-title">description</h5></h5>
-            <p class="card-text">propLocation</p>
-            <p class="card-text">Price</p>
-          </div>
-        </div>
-        </div>
-        <div class="col-l-3 col-sm-6">
-        <div class="card border-dark mb-3" style="max-width: 18rem;">
-          <div class="card-header">Name</div>
-          <img class="card-img-top" src="..." alt="Card image cap">
-          <div class="card-body text-dark">
-            <h5 class="card-title">description</h5></h5>
-            <p class="card-text">propLocation</p>
-            <p class="card-text">Price</p>
-          </div>
-        </div>
-        </div>
-        <div class="col-l-3 col-sm-6">
-        <div class="card border-dark mb-3" style="max-width: 18rem;">
-          <div class="card-header">Name</div>
-          <img class="card-img-top" src="..." alt="Card image cap">
-          <div class="card-body text-dark">
-            <h5 class="card-title">description</h5></h5>
-            <p class="card-text">propLocation</p>
-            <p class="card-text">Price</p>
-          </div>
-        </div>
-        </div>
-        <div class="col-l-3 col-sm-6">
-        <div class="card border-dark mb-3" style="max-width: 18rem;">
-          <div class="card-header">Name</div>
-          <img class="card-img-top" src="..." alt="Card image cap">
-          <div class="card-body text-dark">
-            <h5 class="card-title">description</h5></h5>
-            <p class="card-text">propLocation</p>
-            <p class="card-text">Price</p>
-          </div>
-        </div>
-        </div> -->
     </div>
   </div>
 

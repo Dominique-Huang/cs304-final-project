@@ -1,6 +1,6 @@
 import loft
 
-from flask import (Flask, url_for, request, render_template, flash)
+from flask import (Flask, url_for, redirect, request, render_template, flash)
 
 app = Flask(__name__)
 
@@ -17,7 +17,7 @@ def addUser():
         school = request.form.get('school')
         pw = request.form.get('pw')
         pw2 = request.form.get('pw_confirm')
-        
+        valid = True
         # print(any(char.isdigit() for char in pw))
         # valid = True
         if(len(name) < 4):
@@ -36,22 +36,24 @@ def addUser():
         # print valid
         if valid == True:
             loft.createUser(conn, name, email, school, pw)
-        return render_template('account.html')
+            return redirect(url_for('homePage'))
+        else:
+            return render_template('account.html')
     else:
         return render_template('account.html')
 
     #Add bcrypt in beta
-    valid = True
-    if(name.length < 4):
-        flash("Name must be at least 4 characters long")
-        valid = False
-    if(email[-4:] != ".edu" and "@" not in email):
-        flash("Please enter a valid school email")
-        valid = False
-    if(pw != pw2):
-        flash("The pas")
-    loft.createUser(conn, name, email, school, pw)
-    return render_template('login.html')
+    # valid = True
+    # if(name.length < 4):
+    #     flash("Name must be at least 4 characters long")
+    #     valid = False
+    # if(email[-4:] != ".edu" and "@" not in email):
+    #     flash("Please enter a valid school email")
+    #     valid = False
+    # if(pw != pw2):
+    #     flash("The pas")
+    # loft.createUser(conn, name, email, school, pw)
+    # return render_template('login.html')
 
 @app.route('/add-property/', methods = ["GET","POST"])
 # For first time users to create an account

@@ -1,0 +1,106 @@
+<!--Purpose: Add a property form-->
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name=author content="">
+    <meta name=description content="">
+    <meta name=keywords content="">
+    <title></title>
+    <!-- css stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+    <!-- fonts -->
+</head>
+
+<body>
+    <div align="center">
+        <div class="card border-dark mb-3" style="max-width: 40rem;">
+        <div style="padding: 30px;">
+          <div class="card-header">Create New Property</div>
+            <form>
+                <!--name = request.form.get('name')-->
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" aria-describedby="name of property" placeholder="Enter name">
+                    <!--<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>-->
+                </div>
+                <!--descrip = request.form.get('descrip')-->
+                <div class="form-group">
+                    <label for="descrip">Description</label>
+                    <textarea class="form-control" id="descrip" rows="3" placeholder="Describe your property"></textarea>
+                </div>
+                <!--loc = request.form.get('location')-->
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <input type="text" class="form-control" id="location" aria-describedby="enter location" placeholder="Enter your property location">
+                </div>
+                <!--price = request.form.get('price')-->
+                <div class="form-group">
+                    <label for="price">Price Per Month</label>
+                    <input type="number" class="form-control" id="price" aria-describedby="enter price" placeholder="Enter price">
+                </div>
+                <!--smoker = request.form.get('smoker')-->
+                <fieldset class="form-group">
+                <label for="smoker">Is your property smoker friendly?</label>
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="smoker" id="smokerYes" value="1">
+                    Yes
+                  </label>
+                </div>
+                <div class="form-check">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="smoker" id="smokerNo" value="0">
+                        No
+                    </label>
+                </div>
+                </fieldset>
+                <!--gender = request.form.get('gender')-->
+                <fieldset class="form-group">
+                <label for="gender">Do you have a preferred gender?</label>
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="gender" id="gender1" value="1">
+                    All female
+                  </label>
+                </div>
+                <div class="form-check">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="gender" id="gender2" value="2">
+                    All male
+                 </label>
+                </div>
+                <div class="form-check">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="gender" id="gender3" value="3">
+                    Other
+                  </label>
+                </div>
+              </fieldset>
+                <!--pet = request.form.get('pet')-->
+                <fieldset class="form-group">
+                <label for="pet">Is your property pet friendly?</label>
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="pet" id="petYes" value="1">
+                    Yes
+                  </label>
+                </div>
+                <div class="form-check">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="pet" id="petNo" value="0">
+                        No
+                    </label>
+                </div>
+              </fieldset>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+        </div>
+     </div>
+    </div>
+
+</body>
+
+</html>
