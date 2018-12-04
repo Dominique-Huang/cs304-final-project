@@ -40,9 +40,9 @@ create table properties(
     `propDescription` varchar(100) DEFAULT NULL,
     `propLocation` varchar(150) DEFAULT NULL,
     `propPrice` int(10) unsigned DEFAULT NULL,
-    `propSmoker` bit DEFAULT 0, /*1 if okay with smoker, 0 if not*/
-    `propGender` int(1) DEFAULT 3, /*1 if female only, 2 if male only, 3 if no preference*/
-    `propPet` bit DEFAULT 0, /*1 if okay with pet, 0 if not*/
+    `propSmoker` int(1) DEFAULT NULL, /*1 if okay with smoker, 0 if not*/
+    `propGender` int(1) DEFAULT NULL, /*1 if female only, 2 if male only, 3 if no preference*/
+    `propPet` int(1) DEFAULT NULL, /*1 if okay with pet, 0 if not*/
     `PID` int(10) unsigned NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (PID)
 );

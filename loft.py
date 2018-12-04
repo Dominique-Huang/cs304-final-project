@@ -11,12 +11,6 @@ def getConn(db):
     conn.autocommit(True)
     return conn
 
-#def createUser(conn, name, email, school, pw):
-#    curs = conn.cursor(MySQLdb.cursors.DictCursor)
-#    curs.execute('''insert into `users` values (%s, %s, &s, %s)''', 
-#                (name, email, school, pw,))
-#    return curs.fetchone()
-
 #--Adding to Database-- 
 def createUser(conn, name, email, pw, university):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
@@ -24,7 +18,7 @@ def createUser(conn, name, email, pw, university):
                 (name, email, pw, university,))
     return curs.fetchone()
     
-def createProperty(conn, descrip, name, loc, price, smoker, gender, pet):
+def createProperty(conn, name, descrip, loc, price, smoker, gender, pet):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('''insert into properties values (%s, %s, %s, %s, %s, %s, %s, NULL)''', 
                 (name, descrip, loc, price, smoker, gender, pet,))
@@ -58,12 +52,26 @@ def addHostProp(conn, UID, PID):
 def searchProp(conn, gender, location, price):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     if(gender == 3): #no preference
-        gender = "1, 2, 3"
+        gender = "1, 2, 3 "
     location = "%" + location + "%"
-    curs.execute('''select * from properties where gender in (%s) and location like %s and price < %s''',
+    curs.execute('''select * from properties where propGender in (%s) and propLocation like %s and propPrice < %s''',
                 (gender, location, price))
     return curs.fetchall()
 
+#updating table values
+def updateUser(conn, UID, name, email, pw, university):
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''update users set name = %s, email = %s, pw = %s, university = %s where UID = %s''', 
+                (name, email, pw, university, UID))
+    return curs.fetchone
+
+def updateProperty(conn, PID, name, descrip, loc, price, smoker, gender, pet):
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''update properties set name = %s, descrip = %s, loc = %s, price = %s, smoker = %s, gender = %s, pet = %s where PID = %s''', 
+                (name, descrip, loc, price, smoker, gender, pet, PID))
+    return curs.fetchone
+
+#retrieves last property created based on largest PID value
 def getLastProperty(conn):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('''select * from properties where PID = (select max(PID) from properties)''')
@@ -88,3 +96,4 @@ if __name__ == '__main__':
     conn = getConn('loft')
     # user = createUser(conn, 'Ally', 'ally@tufts.edu', 'Password123', 'Tufts University')
     prop = createProperty(conn, 'House', 'A House in Boston', 'Boston', 800, 0, 1, 0)
+    print(searchProp(conn,3,"",10000))
