@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name=author content="">
+    <meta name=description content="">
+    <meta name=keywords content="">
+    <title></title>
+    <!-- css stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+    <!-- fonts -->
+</head>
+<body>
+    <!--display all flashed messages-->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div id="messages">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    <!-- Form to create a user -->
+    <form method = "POST" action = "{{ url_for('addUser') }}">
+        <p><label>Name: <input name = "name"></label></p>
+        <p><label>University Email: <input name = "email" ></label></p>
+        <p><label>University: <input name = "school"></label></p>
+        <p><label>Password: <input name = "pw" type = "password"></label></p>
+        <p><label>Re-enter Password: <input name = "pw_confirm" type = "password"></label></p>
+        <p><button class = "sign_up" type = "submit">Sign Up</button></p>
+  </form>
+
+</body>
+
+</html>
