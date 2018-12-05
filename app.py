@@ -98,11 +98,25 @@ def profilePage(id):
     return render_template('profile.html', profile = profile)
 
 @app.route('/edit/<id>', methods = ["GET", "POST"])
-def editPage(id):
-    return render_template('index.html')
+def edit(id):
+    if request.method == 'GET':
+        conn = loft.getConn('loft')
+        prop = loft.getOne(conn, id)
+        return render_template('edit.html', item = prop)
+    else:
+        conn = loft.getConn('loft')
+        name = request.form.get('name')
+        descrip = request.form.get('descrip')
+        loc = request.form.get('location')
+        price = request.form.get('price')
+        smoker = request.form.get('smoker')
+        gender = request.form.get('gender')
+        pet = request.form.get('pet')
+        loft.updateProperty(conn, id, name, descrip, loc, price, smoker, gender, pet)
+        return redirect(url_for('showPage', id = id))
     
 @app.route('/delete/<id>', methods = ["POST"])
-def deletePage(id):
+def delete(id):
     return render_template('index.html')
 
 if __name__ == '__main__':

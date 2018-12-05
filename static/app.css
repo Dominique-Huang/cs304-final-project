@@ -1,3 +1,7 @@
+html, body {
+    height: 100%;
+}
+
 a.card {
   color: #212529;
   text-decoration: none;
@@ -7,3 +11,4 @@ a.card:hover {
   color: #6959cd;
   text-decoration: none;
 }
+

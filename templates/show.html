@@ -10,7 +10,7 @@
     <meta name=keywords content="">
     <title></title>
     <!-- css stylesheets -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <!-- fonts -->
 </head>
 
@@ -30,8 +30,8 @@
                 </div>
                 <div>
                   
-                  <a href='/edit/{{item.PID}}' type="button" class="btn btn-dark">Edit</a>
-                  <a href='/delete/{{item.PID}}' type="button" class="btn btn-dark">Delete</a>
+                  <button onclick="window.location.href='/edit/{{item.PID}}'" type="button" class="btn btn-dark">Edit</button>
+                  <button onclick="window.location.href='/delete/{{item.PID}}'" type="button" class="btn btn-dark">Delete</button>
                 </div>
               </div>
             </div>
