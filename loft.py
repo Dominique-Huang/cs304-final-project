@@ -100,6 +100,11 @@ def getProfile(conn, id):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('''select * from users where UID = %s''', [id])
     return curs.fetchone()
+    
+def deleteProp(conn, id):
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''delete from properties where PID = %s''', [id])
+    return 
 
 if __name__ == '__main__':
     conn = getConn('loft')
