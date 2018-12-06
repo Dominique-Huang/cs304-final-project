@@ -1,0 +1,135 @@
+<!--Purpose: Add a property form-->
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name=author content="">
+    <meta name=description content="">
+    <meta name=keywords content="">
+    <title></title>
+    <!-- css stylesheets -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <!-- fonts -->
+</head>
+
+<body>
+    <div align="center">
+        <div class="card border-dark mb-3" style="max-width: 40rem;">
+        <div style="padding: 30px;">
+          <div class="card-header">Edit Property</div>
+          
+            <form method = "POST" action = "{{ url_for('edit', id=item.PID)}}">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" name="name" aria-describedby="name of property" value = "{{item.propName}}">
+                    <!--<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>-->
+                </div>
+                <!--descrip = request.form.get('descrip')-->
+                <div class="form-group">
+                    <label for="descrip">Description</label>
+                    <textarea class="form-control" name="descrip" rows="3">{{item.propDescription}}</textarea>
+                </div>
+                <!--loc = request.form.get('location')-->
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <input type="text" class="form-control" name="location" aria-describedby="enter location" value = "{{item.propLocation}}">
+                </div>
+                <!--price = request.form.get('price')-->
+                <div class="form-group">
+                    <label for="price">Price Per Month</label>
+                    <input type="number" class="form-control" name="price" aria-describedby="enter price" value = "{{item.propPrice}}">
+                </div>
+    
+            <fieldset class="form-group">
+            <label for="smoker">Is your property smoker friendly?</label>   
+                <div class="form-check">
+                    <label class="form-check-label">
+                        {% if item.propSmoker == 0 %}
+                            <input type="radio" class="form-check-input" name="smoker" id="smokerYes" value="1" checked>
+                        {% else %}
+                            <input type="radio" class="form-check-input" name="smoker" id="smokerYes" value="1">
+                        {% endif %}
+                        Yes
+                    </label>
+                </div>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        {% if item.propSmoker == 1 %}
+                            <input type="radio" class="form-check-input" name="smoker" id="smokerNo" value="0" checked>
+                        {% else %}
+                            <input type="radio" class="form-check-input" name="smoker" id="smokerNo" value="0">
+                        {% endif %}
+                        No
+                    </label>
+                </div>
+            </fieldset>
+            
+            <fieldset class="form-group">
+            <label for="gender">Do you have a preferred gender?</label>
+                <div class="form-check">
+                  <label class="form-check-label">
+                    {% if item.propGender == 1 %}
+                        <input type="radio" class="form-check-input" name="gender" id="gender1" value="1" checked>
+                    {% else %}
+                        <input type="radio" class="form-check-input" name="gender" id="gender1" value="1">
+                    {% endif %}  
+                    All female
+                  </label>
+                </div>
+                <div class="form-check">
+                <label class="form-check-label">
+                    {% if item.propGender == 2 %}
+                        <input type="radio" class="form-check-input" name="gender" id="gender2" value="2" checked>
+                    {% else %}
+                        <input type="radio" class="form-check-input" name="gender" id="gender2" value="2">
+                    {% endif %}
+                    All male
+                 </label>
+                </div>
+                <div class="form-check">
+                <label class="form-check-label">
+                    {% if item.propGender == 3 %}
+                        <input type="radio" class="form-check-input" name="gender" id="gender3" value="3"checked>
+                    {% else %}
+                        <input type="radio" class="form-check-input" name="gender" id="gender3" value="3">
+                    {% endif %}
+                    
+                    Other
+                  </label>
+                </div>
+              </fieldset>
+              
+              <fieldset class="form-group">
+                <label for="pet">Is your property pet friendly?</label>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        {{item.propGender}}
+                        {% if item.propPet == 1 %}
+                            <input type="radio" class="form-check-input" name="pet" id="petYes" value="1" checked>
+                        {% else %}
+                            <input type="radio" class="form-check-input" name="pet" id="petYes" value="1">
+                        {% endif %}
+                        Yes
+                    </label>
+                </div>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        {{item.propGender}}
+                        {% if item.propPet == 0 %}
+                            <input type="radio" class="form-check-input" name="pet" id="petNo" value="0" checked>
+                        {% else %}
+                            <input type="radio" class="form-check-input" name="pet" id="petNo" value="0">
+                        {% endif %}
+                        No
+                    </label>
+                </div>
+              </fieldset>
+              <button type="submit" class="btn btn-dark">Submit</button>
+            </form>
+        </div>
+        </div>
+     </div>
+    </div>
+</body>
+</html>
