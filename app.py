@@ -1,10 +1,13 @@
 import loft
+import bcrypt
+import MySQLdb
 
 from flask import (Flask, url_for, redirect, request, render_template, flash)
 
 app = Flask(__name__)
 
 app.secret_key = "Mb.Jp2u/6XT/)b`."
+
 
 @app.route('/start/', methods = ['POST', 'GET'])
 # For first time users to create an account
@@ -35,12 +38,50 @@ def addUser():
         
         # print valid
         if valid == True:
-            loft.createUser(conn, name, email, pw, school)
+            hashed = bcrypt.hashpw(pw.encode('utf-8'), bcrypt.gensalt())
+            curs = conn.cursor(MySQLdb.cursors.DictCursor)
+            curs.execute('SELECT email FROM users WHERE email = %s', [email])
+            row = curs.fetchone()
+            if row is not None:
+                flash('An account with that email already exists')
+                return redirect(url_for('addUser'))
+            loft.createUser(conn, name, email, hashed, school)
             return redirect(url_for('showProperties'))
         else:
             return render_template('account.html')
     else:
         return render_template('account.html')
+
+     
+#@app.route('/login/', methods=["POST"])
+@app.route('/login/', methods=['POST', 'GET'])
+def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        passwd = request.form['pw']
+        conn = loft.getConn('loft')
+        curs = conn.cursor(MySQLdb.cursors.DictCursor)
+        curs.execute('SELECT pw FROM users WHERE email = %s',
+                     [email])
+        row = curs.fetchone()
+        if row is None:
+            # Same response as wrong password, so no information about what went wrong
+            flash('login incorrect. Try again or join')
+            return redirect( url_for('login'))
+        hashed = row['pw']
+        # strings always come out of the database as unicode objects
+        if bcrypt.hashpw(passwd.encode('utf-8'),hashed.encode('utf-8')) == hashed:
+            flash('successfully logged in with '+email)
+            #session['username'] = username
+            #session['logged_in'] = True
+            #session['visits'] = 1
+            return redirect(url_for('showProperties'))
+        else:
+            flash('login incorrect. Try again or join')
+            return redirect( url_for('login'))
+    else:
+        return render_template('login.html')
+
 
 @app.route('/add-property/', methods = ["GET","POST"])
 # For first time users to create an account
