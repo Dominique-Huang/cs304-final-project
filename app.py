@@ -156,9 +156,11 @@ def edit(id):
         loft.updateProperty(conn, id, name, descrip, loc, price, smoker, gender, pet)
         return redirect(url_for('showPage', id = id))
     
-@app.route('/delete/<id>', methods = ["POST"])
+@app.route('/delete/<id>', methods = ['GET', 'DELETE'])
 def delete(id):
-    return render_template('index.html')
+    conn = loft.getConn('loft')
+    loft.deleteProp(conn, id)
+    return redirect(url_for('showProperties'))
 
 if __name__ == '__main__':
     app.debug = True
