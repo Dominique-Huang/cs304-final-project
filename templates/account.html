@@ -12,6 +12,16 @@
     <!-- fonts -->
 </head>
 <body>
+    <!--display all flashed messages-->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div id="messages">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
     <!-- Form to create a user -->
   <!--  <form method = "POST" action = "{{ url_for('addUser') }}">-->
   <!--      <p><label>Name: <input name = "name"></label></p>-->

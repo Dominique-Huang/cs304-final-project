@@ -30,6 +30,8 @@
                   <form method = "POST" action = "{{ url_for('showPage', id = item.PID) }}">
                     {% for date in dates %}
                       <p class="card-text">{{date.startDate}} : {{date.endDate}}
+                      <input type = "date" name = "start" value = "{{date.startDate}}">
+                      <input type = "date" name = "end" value = "{{date.endDate}}">
                       <button type = "submit" name = "book">Book This</button></p>
                     {% endfor %}'
                   </form>
