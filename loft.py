@@ -18,10 +18,10 @@ def createUser(conn, name, email, pw, university):
                 (name, email, pw, university,))
     return curs.fetchone()
     
-def createProperty(conn, name, descrip, loc, price, smoker, gender, pet):
+def createProperty(conn, name, descrip, loc, price, smoker, gender, pet, picfile):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('''insert into properties values (%s, %s, %s, %s, %s, %s, %s, NULL)''', 
-                (name, descrip, loc, price, smoker, gender, pet,))
+    curs.execute('''insert into properties values (%s, %s, %s, %s, %s, %s, %s, %s, NULL)''', 
+                (name, descrip, loc, price, smoker, gender, pet, picfile))
     curs.execute('''select last_insert_id() from properties''')
     return curs.fetchone()
 

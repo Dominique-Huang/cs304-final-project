@@ -43,6 +43,7 @@ create table properties(
     `propSmoker` int(1) DEFAULT NULL, /*1 if okay with smoker, 0 if not*/
     `propGender` int(1) DEFAULT NULL, /*1 if female only, 2 if male only, 3 if no preference*/
     `propPet` int(1) DEFAULT NULL, /*1 if okay with pet, 0 if not*/
+    `propFilename` varchar(50),
     `PID` int(10) unsigned NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (PID)
 );

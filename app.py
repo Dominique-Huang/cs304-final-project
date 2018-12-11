@@ -2,12 +2,25 @@ import MySQLdb
 import bcrypt
 import loft
 
+<<<<<<< HEAD
 from flask import (Flask, url_for, redirect, request, render_template, flash, session)
+=======
+from flask import (Flask, url_for, redirect, request, render_template, flash)
+from werkzeug import secure_filename
+
+import sys, os, random
+import imghdr
+>>>>>>> 0d59a64... Implemented file upload
 
 app = Flask(__name__)
 
 app.secret_key = "Mb.Jp2u/6XT/)b`."
 
+<<<<<<< HEAD
+=======
+app.config['UPLOADS'] = 'uploads'
+
+>>>>>>> 0d59a64... Implemented file upload
 @app.route('/start/', methods = ['POST', 'GET'])
 # For first time users to create an account
 # Would need to create an extra section for tenants
@@ -98,6 +111,7 @@ def addProperty():
         smoker = request.form.get('smoker')
         gender = request.form.get('gender')
         pet = request.form.get('pet')
+
         print((conn, name, descrip, loc, price, smoker, gender, pet))
         row = loft.createProperty(conn, name, descrip, loc, price, smoker, gender, pet)
         
@@ -121,6 +135,33 @@ def addProperty():
 
         UID = session['UID']
         loft.addHostProp(conn, UID, PID)
+
+        
+        try:
+            f = request.files['pic'] #update front-end to ask for pic
+            print(f)
+            mime_type = imghdr.what(f.stream)
+            print mime_type.lower()
+            if mime_type.lower() not in ['jpeg','gif','png']:
+                raise Exception('Not a JPEG, GIF or PNG: {}'.format(mime_type))
+            #filename = secure_filename('{}'.format(mime_type))
+            filename = secure_filename('{}.{}'.format(name,mime_type))
+            print("filename: ", filename)
+            pathname = os.path.join(app.config['UPLOADS'],filename)
+            print("pathname: ", pathname)
+            f.save(pathname)
+            flash('Upload successful')
+            
+        except Exception as err:
+            flash('Upload failed {why}'.format(why=err))
+            print('Upload failed {why}'.format(why=err))
+            return render_template('addProp.html')
+        
+        print((conn, name, descrip, loc, price, smoker, gender, pet, filename))
+        
+        # loft.createProperty(conn, name, descrip, loc, price, smoker, gender, pet)
+        loft.createProperty(conn, name, descrip, loc, price, smoker, gender, pet, filename)
+
         
         return redirect(url_for('showProperties'))
     else:
