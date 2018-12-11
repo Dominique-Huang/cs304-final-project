@@ -106,17 +106,17 @@ def addProperty():
         #right now, each property only has 3 date ranges initially
         start1 = request.form.get('start1')
         end1 = request.form.get('end1')
-        if start1 != '' and end1 != '':
+        if start1 != '' or end1 != '':
             loft.createDate(conn, PID, start1, end1)
         
         start2 = request.form.get('start2')
         end2 = request.form.get('end2')
-        if start2 != '' and end2 != '':
+        if start2 != '' or end2 != '':
             loft.createDate(conn, PID, start2, end2)
         
         start3 = request.form.get('start3')
         end3 = request.form.get('end3')
-        if start3 != '' and end3 != '':
+        if start3 != '' or end3 != '':
             loft.createDate(conn, PID, start3, end3)
 
         UID = session['UID']
@@ -135,15 +135,30 @@ def showProperties():
     conn = loft.getConn('loft')
     if request.method == 'POST':
         gender = int(request.form.get('gender'))
+        
         location = request.form.get('location')
+        if location is None:
+            location = ""
+        
         price = request.form.get('price') #might use price ranges in the future
-        if price == "":
+        if price is None:
             price = 100000 #no upper limit
+        
         start = request.form.get('start')
         end = request.form.get('end')
-        print(start)
-        print(end)
-        propList = loft.searchProp(conn, gender, location, price, start, end)
+        if start is None:
+            start = '1000-12-31' #no upper limit
+        if end is None:
+            end = '3000-01-01' #no lower limit
+        
+        print("Gender: " + str(gender))
+        print("Location: " + location)
+        print("Price: " + str(price))
+        print("Start: " + start)
+        print("End: " + end)
+        propList = loft.getAll(conn) #shows all properties
+
+        # propList = loft.searchProp(conn, gender, location, price, start, end)
     else: 
         propList = loft.getAll(conn) #shows all properties
     return render_template('index.html', propList = propList)
