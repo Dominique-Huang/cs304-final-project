@@ -60,16 +60,18 @@ def searchProp(conn, gender, location, price, start, end):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     location = "%" + location + "%"
     if (gender == 3): #no preference
-        curs.execute('''select * from (properties inner join dates
+        PID_list = curs.execute('''select * from (properties inner join dates
                         on dates.PID = properties.PID)
                         where propLocation like %s and propPrice < %s
-                        and startDate <= %s and endDate >= %s''',
+                        and startDate <= %s and endDate >= %s 
+                        group by properties.PID''',
                     (location, price, start, end))
     else:
         curs.execute('''select * from (properties inner join dates
-                        where dates.PID = properties.PID)
-                        on propGender in (%s) and propLocation like %s and propPrice < %s
-                        and startDate <= start and endDate >= end''',
+                        on dates.PID = properties.PID)
+                        where propGender = %s and propLocation like %s and propPrice < %s
+                        and startDate <= %s and endDate >= %s 
+                        group by properties.PID''',
                     (gender, location, price, start, end))
     return curs.fetchall()
 
@@ -148,9 +150,9 @@ def getRenterProps(conn, UID):
 if __name__ == '__main__':
     conn = getConn('loft')
     # createDate(conn, 2, '2018-01-01', '2018-06-01')
-    print(searchProp(conn,3,'',100000, '2019-07-01','2019-08-01'))
-    print(searchProp(conn,3,'',100000, '2020-07-01','2020-08-01'))
-    print(searchProp(conn,3,'',100000, '3000-12-31','1000-01-01'))
+    print(searchProp(conn,3,'',100000, '2019-12-31','2020-05-01'))
+    print(searchProp(conn,3,'',100000, '3000-12-31', '1000-01-01'))
+    print(searchProp(conn,2,'',100000, '3000-12-31','1000-01-01'))
     # user = createUser(conn, 'Ally', 'ally@tufts.edu', 'Password123', 'Tufts University')
     # prop = createProperty(conn, 'House', 'A House in Boston', 'Boston', 800, 0, 1, 0)
     # print prop

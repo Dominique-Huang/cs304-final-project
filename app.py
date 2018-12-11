@@ -99,30 +99,48 @@ def addProperty():
         gender = request.form.get('gender')
         pet = request.form.get('pet')
         print((conn, name, descrip, loc, price, smoker, gender, pet))
-        row = loft.createProperty(conn, name, descrip, loc, price, smoker, gender, pet)
-        
-        PID = row['last_insert_id()']
-        
-        #right now, each property only has 3 date ranges initially
+
+        #right now, each property only add up to 3 date ranges initially
         start1 = request.form.get('start1')
         end1 = request.form.get('end1')
-        if start1 != '' or end1 != '':
+        
+        Valid = True 
+        if name == '':
+            flash('Please enter a valid name')
+            Valid = False
+        if loc == '':
+            flash('Please enter a valid location')
+            Valid = False
+        if price < 0 or price == '':
+            flash('Please enter a valid price')
+            Valid = False
+        if start1 == '' or end1 == '':
+            flash('Please insert at least 1 date range')
+            Valid = False
+        
+        if Valid == False:
+            return render_template('addProp.html')
+        
+        else:
+        #there must be at least 1 valid date range before property can be added
+            row = loft.createProperty(conn, name, descrip, loc, price, smoker, gender, pet)
+            PID = row['last_insert_id()']
             loft.createDate(conn, PID, start1, end1)
-        
-        start2 = request.form.get('start2')
-        end2 = request.form.get('end2')
-        if start2 != '' or end2 != '':
-            loft.createDate(conn, PID, start2, end2)
-        
-        start3 = request.form.get('start3')
-        end3 = request.form.get('end3')
-        if start3 != '' or end3 != '':
-            loft.createDate(conn, PID, start3, end3)
+    
+            start2 = request.form.get('start2')
+            end2 = request.form.get('end2')
+            if start2 != '' or end2 != '':
+                loft.createDate(conn, PID, start2, end2)
+            
+            start3 = request.form.get('start3')
+            end3 = request.form.get('end3')
+            if start3 != '' or end3 != '':
+                loft.createDate(conn, PID, start3, end3)
 
-        UID = session['UID']
-        loft.addHostProp(conn, UID, PID)
-        
-        return redirect(url_for('showProperties'))
+            UID = session['UID']
+            loft.addHostProp(conn, UID, PID)
+            
+            return redirect(url_for('showProperties'))
     else:
         if 'UID' not in session:
             flash('You must be logged in to create a property')
@@ -137,28 +155,26 @@ def showProperties():
         gender = int(request.form.get('gender'))
         
         location = request.form.get('location')
-        if location is None:
-            location = ""
         
         price = request.form.get('price') #might use price ranges in the future
-        if price is None:
+        if price == '':
             price = 100000 #no upper limit
         
         start = request.form.get('start')
         end = request.form.get('end')
-        if start is None:
-            start = '1000-12-31' #no upper limit
-        if end is None:
-            end = '3000-01-01' #no lower limit
+        if start == '':
+            start = '3000-12-31' #no upper limit
+        if end == '':
+            end = '1000-01-01' #no lower limit
         
         print("Gender: " + str(gender))
         print("Location: " + location)
         print("Price: " + str(price))
         print("Start: " + start)
         print("End: " + end)
-        propList = loft.getAll(conn) #shows all properties
+        # propList = loft.getAll(conn) #shows all properties
 
-        # propList = loft.searchProp(conn, gender, location, price, start, end)
+        propList = loft.searchProp(conn, gender, location, price, start, end)
     else: 
         propList = loft.getAll(conn) #shows all properties
     return render_template('index.html', propList = propList)
