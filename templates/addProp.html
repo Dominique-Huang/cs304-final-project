@@ -18,7 +18,19 @@
         <div class="card border-dark mb-3" style="max-width: 40rem;">
         <div style="padding: 30px;">
           <div class="card-header">Create New Property</div>
+
+          <!--display all flashed messages-->
+          {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                  <div id="messages">
+                  {% for message in messages %}
+                      <p>{{ message }}</p>
+                  {% endfor %}
+                  </div>
+              {% endif %}
+          {% endwith %}
             <form method = "POST" action = "{{ url_for('addProperty') }}" enctype="multipart/form-data">
+              
                 <!--name = request.form.get('name')-->
                 <div class="form-group">
                     <label for="name">Name</label>
