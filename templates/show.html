@@ -26,7 +26,15 @@
                 <div class="card-body text-dark">
                   <h5 class="card-text">{{item.propDescription}}</h5>
                   <p class="card-text">{{item.propLocation}}</p>
-                  <p class="card-text">{{item.propPrice}}</p>
+                  <p class="card-text">Price: {{item.propPrice}}</p>
+                  <form method = "POST" action = "{{ url_for('showPage', id = item.PID) }}">
+                    {% for date in dates %}
+                      <p class="card-text">{{date.startDate}} : {{date.endDate}}
+                      <input type = "hidden" name = "start" value = "{{date.startDate}}">
+                      <input type = "hidden" name = "end" value = "{{date.endDate}}">
+                      <button type = "submit" name = "book">Book This</button></p>
+                    {% endfor %}
+                  </form>
                 </div>
                 <div>
                   
