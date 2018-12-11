@@ -93,7 +93,20 @@ def updateProperty(conn, PID, name, descrip, loc, price, smoker, gender, pet):
                         where 
                             PID = %s''', 
                 (name, descrip, loc, price, smoker, gender, pet, PID))
-    return curs.fetchone
+    return curs.fetchone()
+
+def deleteDate(conn, PID, start):
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''delete from dates where PID = %s and startDate = %s''',
+                (PID, start)) #assuming no two date ranges start at the same time
+    return curs.fetchone()
+
+def book(conn, UID, PID, start, end):
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    addRenterProp(conn, UID, PID, start, end)
+    deleteDate(conn, PID, start)
+    curs.execute('''select * from renter_prop where UID = %s''', [UID])
+    return curs.fetchall()
 
 def getAll(conn):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
@@ -116,6 +129,22 @@ def getDates(conn, id):
     curs.execute('''select * from dates where PID = %s''', [id])
     return curs.fetchall()
 
+def getHostProps(conn, UID):
+    '''retrieves all the host's properties'''
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''select * from (host_prop inner join properties 
+                on host_prop.PID = properties.PID)
+                where host_prop.UID = %s''', [UID])
+    return curs.fetchall()
+
+def getRenterProps(conn, UID):
+    '''retrieves all the renter's properties'''
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''select * from (renter_prop inner join properties 
+                on renter_prop.PID = properties.PID)
+                where renter_prop.UID = %s''', [UID])
+    return curs.fetchall()
+    
 if __name__ == '__main__':
     conn = getConn('loft')
     # createDate(conn, 2, '2018-01-01', '2018-06-01')
