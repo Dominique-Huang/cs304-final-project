@@ -22,20 +22,31 @@
               <div style="padding: 30px;">
                 <div class="card-header">{{item.propName}}</div>
                 
-                <img class="card-img-top" src="{{item.propFilename}}" alt="Card image cap">
-                <!--<img src="{{url_for('pic',nm=pic['nm'])}}" alt="{{pic['name']}}">-->
+                <img class="card-img-top" src="..." alt="Card image cap">
                 <div class="card-body text-dark">
                   <h5 class="card-text">{{item.propDescription}}</h5>
                   <p class="card-text">{{item.propLocation}}</p>
-                  <p class="card-text">Price: {{item.propPrice}}</p>
-                  <form method = "POST" action = "{{ url_for('showPage', id = item.PID) }}">
-                    {% for date in dates %}
-                      <p class="card-text">{{date.startDate}} : {{date.endDate}}
-                      <input type = "hidden" name = "start" value = "{{date.startDate}}">
-                      <input type = "hidden" name = "end" value = "{{date.endDate}}">
-                      <button type = "submit" name = "book">Book This</button></p>
-                    {% endfor %}
-                  </form>
+                  <p class="card-text">{{item.propPrice}}</p>
+                  
+                  {% if item.propSmoker == 0 %}
+                  <p class="card-text">Smokers not allowed</p>
+                  {% else %}
+                  <p class="card-text">Smoker friendly</p>
+                  {% endif %}
+                  
+                  {% if item.propGender == 1 %}
+                  <p class="card-text">Female only</p>
+                  {% elif item.propGender == 2 %}
+                  <p class="card-text">Male only</p>
+                  {% else %}
+                  <p class="card-text">No gender preference</p>
+                  {% endif %}
+                  
+                  {% if item.propPet == 1 %}
+                  <p class="card-text">Pet friendly</p>
+                  {% else %}
+                  <p class="card-text">Pets not allowed</p>
+                  {% endif %}
                 </div>
                 <div>
                   
