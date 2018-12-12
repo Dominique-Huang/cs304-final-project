@@ -136,7 +136,7 @@ def addProperty():
         
         print((conn, name, descrip, loc, price, smoker, gender, pet, filename))
 
-        loft.createProperty(conn, name, descrip, loc, price, smoker, gender, pet, filename)
+        row = loft.createProperty(conn, name, descrip, loc, price, smoker, gender, pet, filename)
 
         PID = row['last_insert_id()']
         
