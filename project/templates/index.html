@@ -43,26 +43,42 @@
       <form method = "POST" action = "{{ url_for('showProperties') }}">
         <p>Filter by: </p>
         <div class="form-inline">
-          <div class="form-group">
-            <label for="gender">Gender: </label>
-            <select name = 'gender'>
-            <option value = 1>Female</option>
-            <option value = 2>Male</option>
-            <option value = 3>Other</option>
-            <option value = 3>Any</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="location">Location: </label><input type="text" class="filter" id="location" placeholder="Enter Location">
-          </div>
-          <div class="form-group">
-            <label for="price">Max Price: </label><input type="number" class="filter" id="price" placeholder="Enter maximum price per month">
-          </div>
-          <div class="form-group">
-            <button type = "submit">Submit</button>
+          <div class = "container row">
+            
+            <div class="col-sm-2">
+              <div class="form-group">
+              <label for="gender">Gender: </label>
+              <select name = 'gender'>
+              <option value = 1>Female</option>
+              <option value = 2>Male</option>
+              <option value = 3>Other</option>
+              <option value = 3>Any</option>
+              </select>
+              </div>
+            </div>
+            
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label for="location">Location:  </label><input type="text" class="filter" id="location" placeholder="Enter Location">
+              </div>
+            </div>
+            
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label for="price">Max Price:  </label><input type="number" class="filter" id="price" placeholder="Enter maximum price per month">
+              </div>
+        
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+                <button type = "submit">Submit</button>
+              </div>
+            </div>
+            
           </div>
         </div>
       </form>
+      
       <div class="row mt-5">
         {% for item in propList%}
           <div class = "col-lg-3 col-sm-6" align = "center">
