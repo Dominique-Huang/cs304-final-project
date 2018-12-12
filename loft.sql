@@ -43,7 +43,6 @@ create table properties(
     `propSmoker` int(1) DEFAULT NULL, /*1 if okay with smoker, 0 if not*/
     `propGender` int(1) DEFAULT NULL, /*1 if female only, 2 if male only, 3 if no preference*/
     `propPet` int(1) DEFAULT NULL, /*1 if okay with pet, 0 if not*/
-    `propFilename` varchar(50),
     `PID` int(10) unsigned NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (PID)
 );
@@ -73,16 +72,6 @@ create table host_prop(
     PID int,
     primary key (UID, PID)
 );
-
-drop table if exists renter_prop;
-create table renter_prop(
-    UID int,
-    PID int,
-    startDate date,
-    endDate date,
-    primary key (UID, PID)
-);
-
 
 INSERT INTO users VALUES ('Freddie', 'freddie@bu.edu', 'password','Boston University',1), ('Mary','mary@mit.edu', 'password','Massachusetts Institute of Technology', NULL);
 INSERT INTO tenants VALUES (0, 2, 0, 1);

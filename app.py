@@ -1,7 +1,6 @@
-import MySQLdb
-import bcrypt
 import loft
-
+import bcrypt
+import MySQLdb
 
 from flask import (Flask, url_for, redirect, request, render_template, flash, session)
 from werkzeug import secure_filename
@@ -10,9 +9,11 @@ import sys, os, random
 import imghdr
 
 
+
 app = Flask(__name__)
 
 app.secret_key = "Mb.Jp2u/6XT/)b`."
+
 app.config['UPLOADS'] = 'uploads'
 
 
@@ -39,22 +40,31 @@ def addUser():
             flash("Password is too weak, must be longer than 6 characters and contain a digit")
             valid = False
         
-        curs = conn.cursor(MySQLdb.cursors.DictCursor)
-        curs.execute('SELECT email FROM users WHERE email = %s', [email])
-        row = curs.fetchone()
-        if row is not None:
-            flash('An account with that email already exists')
-            valid = False
-        
+        # print valid
         if valid == True:
             hashed = bcrypt.hashpw(pw.encode('utf-8'), bcrypt.gensalt())
+            curs = conn.cursor(MySQLdb.cursors.DictCursor)
+            curs.execute('SELECT email FROM users WHERE email = %s', [email])
+            row = curs.fetchone()
+            if row is not None:
+                flash('An account with that email already exists')
+                return redirect(url_for('addUser'))
             loft.createUser(conn, name, email, hashed, school)
-            return redirect(url_for('login'))
+            return redirect(url_for('showProperties'))
         else:
-            return render_template('account.html')
+            user = {
+                "name": name,
+                "email": email, 
+                "school": school,
+                "pw": pw,
+                "pw2": pw2
+            }
+            return render_template('account.html', user = user)
     else:
         return render_template('account.html')
 
+     
+#@app.route('/login/', methods=["POST"])
 @app.route('/login/', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
@@ -72,24 +82,15 @@ def login():
         hashed = row['pw']
         # strings always come out of the database as unicode objects
         if bcrypt.hashpw(passwd.encode('utf-8'),hashed.encode('utf-8')) == hashed:
-            curs2 = conn.cursor(MySQLdb.cursors.DictCursor)
-            curs2.execute('''select UID from users where email = %s''',
-                        [email]) #emails are unique
-            row2 = curs2.fetchone()
-            UID = row2['UID']
-            
             flash('successfully logged in with '+email)
-            session['UID'] = UID
+            #session['username'] = username
             #session['logged_in'] = True
             #session['visits'] = 1
             return redirect(url_for('showProperties'))
         else:
             flash('login incorrect. Try again or join')
-            return redirect(url_for('login'))
+            return redirect( url_for('login'))
     else:
-        if 'UID' in session:
-            flash('You are already logged in. Please first logout to log in again.')
-            return redirect(url_for('showProperties'))
         return render_template('login.html')
 
 
@@ -102,6 +103,7 @@ def addProperty():
             return redirect(request.referrer)
         
         conn = loft.getConn('loft')
+
         UID = session['UID']
 
         name = request.form.get('name')
@@ -111,6 +113,7 @@ def addProperty():
         smoker = request.form.get('smoker')
         gender = request.form.get('gender')
         pet = request.form.get('pet')
+
         
         try:
             f = request.files['pic'] #update front-end to ask for pic
@@ -156,14 +159,18 @@ def addProperty():
         UID = session['UID']
         loft.addHostProp(conn, UID, PID)
 
+
+        
+        # PID = loft.getLastProperty(conn)['PID']
+        # start = request.form.get('start_date') #as of now, assuming there is only one time period
+        # end = request.form.get('end_Date')
+        
+        # loft.createDate(conn, PID, start, end)
+
         
         return redirect(url_for('showProperties'))
     else:
-        if 'UID' not in session:
-            flash('You must be logged in to create a property')
-            return redirect(url_for('login'))
-        else:
-            return render_template('addProp.html')
+        return render_template('addProp.html')
 
 @app.route('/', methods = ["GET","POST"])
 def showProperties():
@@ -172,39 +179,22 @@ def showProperties():
         gender = int(request.form.get('gender'))
         location = request.form.get('location')
         price = request.form.get('price') #might use price ranges in the future
-        if price == "":
-            price = 100000 #no upper limit
-        start = request.form.get('start')
-        end = request.form.get('end')
-        print(start)
-        print(end)
-        propList = loft.searchProp(conn, gender, location, price, start, end)
+        # THIS DOESN'T REALLY MAKE SENSE
+        # if price == "":
+        #     price = 100000 #no upper limit
+        propList = loft.searchProp(conn, gender, location, price)
     else: 
         propList = loft.getAll(conn) #shows all properties
     return render_template('index.html', propList = propList)
 
-@app.route('/show/<id>', methods = ["POST", "GET"])
+@app.route('/show/<id>', methods = ["GET"])
 def showPage(id):
+    #conn = loft.getConn('properties')
     conn = loft.getConn('loft')
-    if request.method == 'POST':
-        if 'UID' not in session:
-            flash('You must be logged in to book')
-            return redirect(request.referrer)
-        
-        UID = session['UID']
-        prop = loft.getOne(conn, id)
-        dates = loft.getDates(conn, id)
-
-        start = request.form.get('start')
-        end = request.form.get('end')
-        loft.book(conn, UID, id, start, end)
-        
-        #ideally, this would redirect to my reservations
-        return render_template('show.html', item = prop, dates = dates)
-    else:
-        prop = loft.getOne(conn, id)
-        dates = loft.getDates(conn, id)
-        return render_template('show.html', item = prop, dates = dates)
+    prop = loft.getOne(conn, id)
+    print ("TESTING: ", prop)
+    #return render_template('index.html', item = prop)
+    return render_template('show.html', item = prop)
 
 @app.route('/profile/<id>', methods = ["GET"])
 def profilePage(id):
