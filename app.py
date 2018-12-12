@@ -13,8 +13,6 @@ import imghdr
 app = Flask(__name__)
 
 app.secret_key = "Mb.Jp2u/6XT/)b`."
-
-
 app.config['UPLOADS'] = 'uploads'
 
 
@@ -113,8 +111,6 @@ def addProperty():
         smoker = request.form.get('smoker')
         gender = request.form.get('gender')
         pet = request.form.get('pet')
-
-        print((conn, name, descrip, loc, price, smoker, gender, pet))
         
         try:
             f = request.files['pic'] #update front-end to ask for pic
@@ -136,11 +132,9 @@ def addProperty():
             return render_template('addProp.html')
         
         print((conn, name, descrip, loc, price, smoker, gender, pet, filename))
-        
-        #loft.createProperty(conn, name, descrip, loc, price, smoker, gender, pet, filename)
-        
-        row = loft.createProperty(conn, name, descrip, loc, price, smoker, gender, pet, filename)
-        
+
+        loft.createProperty(conn, name, descrip, loc, price, smoker, gender, pet, filename)
+
         PID = row['last_insert_id()']
         
         #right now, each property only has 3 date ranges initially
@@ -159,7 +153,7 @@ def addProperty():
         if start3 != '' and end3 != '':
             loft.createDate(conn, PID, start3, end3)
 
-
+        UID = session['UID']
         loft.addHostProp(conn, UID, PID)
 
         
