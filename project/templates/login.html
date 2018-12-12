@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name=author content="">
+    <meta name=description content="">
+    <meta name=keywords content="">
+    <title></title>
+    <!-- css stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+    <!-- fonts -->
+</head>
+<body>
+    <!--display all flashed messages-->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div id="messages">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+  <div align="center">
+        <div class="card border-dark mb-3" style="max-width: 40rem;">
+        <div style="padding: 30px;">
+          <div class="card-header">Log in</div>
+            <form method = "POST" action = "{{ url_for('login') }}">
+                
+                <div class="form-group">
+                    <label for="email">University Email </label>
+                    <input type="text" class="form-control" name="email" aria-describedby="email of person" placeholder="Enter university email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="pw">Password</label>
+                    <input type="password" class="form-control" name="pw" aria-describedby="password" placeholder="Enter password">
+                    <small class="form-text text-muted">Password must be longer than 6 characters and contain a digit</small>
+                </div>
+                
+              <button type="submit" class="btn btn-primary sign_up">Sign Up</button>
+            </form>
+        </div>
+        </div>
+     </div>
+    </div>
+
+</body>
+
+</html>
