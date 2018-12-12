@@ -6,6 +6,8 @@ from werkzeug import secure_filename
 import sys, os, random
 import imghdr
 
+#git change
+
 app = Flask(__name__)
 
 app.secret_key = "Mb.Jp2u/6XT/)b`."
