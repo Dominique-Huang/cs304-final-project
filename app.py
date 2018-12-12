@@ -6,11 +6,13 @@ from werkzeug import secure_filename
 import sys, os, random
 import imghdr
 
+
 app = Flask(__name__)
 
 app.secret_key = "Mb.Jp2u/6XT/)b`."
 
 app.config['UPLOADS'] = 'uploads'
+
 @app.route('/start/', methods = ['POST', 'GET'])
 # For first time users to create an account
 # Would need to create an extra section for tenants
@@ -92,8 +94,13 @@ def login():
 # For first time users to create an account
 def addProperty():
     if request.method == 'POST':
+        if 'UID' not in session:
+            flash('You must be logged in to book')
+            return redirect(request.referrer)
+        
         conn = loft.getConn('loft')
 
+        UID = session['UID']
         name = request.form.get('name')
         descrip = request.form.get('descrip')
         loc = request.form.get('location')
@@ -101,10 +108,6 @@ def addProperty():
         smoker = request.form.get('smoker')
         gender = request.form.get('gender')
         pet = request.form.get('pet')
-
-        print((conn, name, descrip, loc, price, smoker, gender, pet))
-
-        #right now, each property only add up to 3 date ranges initially
         start1 = request.form.get('start1')
         end1 = request.form.get('end1')
         
@@ -144,9 +147,12 @@ def addProperty():
                 flash('Upload failed {why}'.format(why=err))
                 print('Upload failed {why}'.format(why=err))
                 return render_template('addProp.html')
-        
+
+
             row = loft.createProperty(conn, name, descrip, loc, price, smoker, gender, pet, filename)
+            
             PID = row['last_insert_id()']
+            
             loft.createDate(conn, PID, start1, end1)
     
             start2 = request.form.get('start2')
@@ -254,6 +260,23 @@ def delete(id):
     conn = loft.getConn('loft')
     loft.deleteProp(conn, id)
     return redirect(url_for('showProperties'))
+   
+ 
+@app.route('/logout/')
+def logout():
+    try:
+        if 'UID' in session:
+            UID = session['UID']
+            session.pop('UID')
+            #session.pop('logged_in')
+            flash('You are logged out')
+            return redirect(url_for('login'))
+        else:
+            flash('you are not logged in. Please login or join')
+            return redirect( url_for('login') )
+    except Exception as err:
+        flash('some kind of error '+str(err))
+        return redirect( url_for('index') )
 
 if __name__ == '__main__':
     app.debug = True
