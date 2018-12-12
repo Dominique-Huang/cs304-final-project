@@ -48,6 +48,7 @@ def addHostProp(conn, UID, PID):
     curs.execute('''insert into host_prop values (%s, %s)''',
                 (UID, PID,))
     return curs.fetchone()
+<<<<<<< HEAD
 
 def addRenterProp(conn, UID, PID, start, end):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
@@ -55,6 +56,9 @@ def addRenterProp(conn, UID, PID, start, end):
                 (UID, PID, start, end))
     return curs.fetchone()
 
+=======
+    
+>>>>>>> ms/booking
 # Searching properties based on specific filters
 def searchProp(conn, gender, location, price, start, end):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
@@ -62,14 +66,14 @@ def searchProp(conn, gender, location, price, start, end):
     if (gender == 3): #no preference
         PID_list = curs.execute('''select * from (properties inner join dates
                         on dates.PID = properties.PID)
-                        where propLocation like %s and propPrice < %s
+                        where propLocation like %s and propPrice <= %s
                         and startDate <= %s and endDate >= %s 
                         group by properties.PID''',
                     (location, price, start, end))
     else:
         curs.execute('''select * from (properties inner join dates
                         on dates.PID = properties.PID)
-                        where propGender = %s and propLocation like %s and propPrice < %s
+                        where propGender = %s and propLocation like %s and propPrice <= %s
                         and startDate <= %s and endDate >= %s 
                         group by properties.PID''',
                     (gender, location, price, start, end))
@@ -162,3 +166,4 @@ if __name__ == '__main__':
     # prop = createProperty(conn, 'House', 'A House in Boston', 'Boston', 800, 0, 1, 0)
     # print prop
     # print(searchProp(conn,3,'Cambridge',10000))
+    # print(searchProp(conn,3,"",10000))

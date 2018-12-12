@@ -148,7 +148,6 @@ def addProperty():
                 print('Upload failed {why}'.format(why=err))
                 return render_template('addProp.html')
 
-
             row = loft.createProperty(conn, name, descrip, loc, price, smoker, gender, pet, filename)
             
             PID = row['last_insert_id()']
