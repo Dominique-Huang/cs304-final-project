@@ -21,7 +21,7 @@ def createUser(conn, name, email, pw, university):
 def createProperty(conn, name, descrip, loc, price, smoker, gender, pet, picfile):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('''insert into properties values (%s, %s, %s, %s, %s, %s, %s, %s, NULL)''', 
-                (name, descrip, loc, price, smoker, gender, pet,propFilename,))
+                (name, descrip, loc, price, smoker, gender, pet,picfile,))
     return curs.fetchone()
 
 def createDate(conn, PID, start, end):
