@@ -48,9 +48,9 @@ def addUser():
             loft.createUser(conn, name, email, hashed, school)
             return redirect(url_for('login'))
         else:
-            return render_template('account.html')
+            return render_template('addUser.html')
     else:
-        return render_template('account.html')
+        return render_template('addUser.html')
 
 @app.route('/login/', methods=['POST', 'GET'])
 def login():
