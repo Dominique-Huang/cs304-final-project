@@ -1,19 +1,8 @@
-<!--Purpose: Add a property form-->
-<!doctype html>
-<html lang="en">
+<!--Purpose: Edit a property form-->
 
-<head>
-    <meta charset="utf-8">
-    <meta name=author content="">
-    <meta name=description content="">
-    <meta name=keywords content="">
-    <title></title>
-    <!-- css stylesheets -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <!-- fonts -->
-</head>
-
-<body>
+{% extends "layout.html" %}
+{% block title %}Edit Property{% endblock %}
+{% block content %}
     <div align="center">
         <div class="card border-dark mb-3" style="max-width: 40rem;">
         <div style="padding: 30px;">
@@ -131,5 +120,4 @@
         </div>
      </div>
     </div>
-</body>
-</html>
+{% endblock %}

@@ -1,140 +1,101 @@
 <!--Purpose: display list of all available spaces-->
 <!--Purpose: display the individual user's profile/settings page-->
-<!doctype html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta name=author content="">
-    <meta name=description content="">
-    <meta name=keywords content="">
-    <title>Home</title>
-    <!-- css stylesheets -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <link rel="stylesheet" href="/static/app.css" type="text/css">
-    <!-- fonts -->
-</head>
-
-<body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-5">
-      <a class="navbar-brand" href="/">Loft39s</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarText">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="{{url_for('showMyProperties')}}">My Properties</span></a>
-          </li>
-          <li class="nav-item active">
-            <a class="nav-link" href="{{url_for('showMyReservations')}}">Reservations</a>
-          </li>
-          <li class="nav-item active">
-            <a class="nav-link" href="{{url_for('addProperty')}}">Add Property</a>
-          </li>
-          <li class="nav-item active">
-            <a class="nav-link" href="{{url_for('logout')}}">Log Out</a>
-          </li>
-        </ul>
-      </div>
-  </nav>
-  
-  <div class = "container">
-      <form method = "POST" action = "{{ url_for('showProperties') }}">
-        <p>Filter by: </p>
-        <div class="form-inline">
-          <div class = "container row">
-            
-            <div class="col-sm-2">
-              <div class="form-group">
-              <label for="gender">Gender: </label>
-              <select name = 'gender'>
-              <option value = 3>Any</option>
-              <option value = 1>Female Only</option>
-              <option value = 2>Male Only</option>
-              <option value = 3>Other</option>
-              </select>
-              </div>
-            </div>
-            
-            <div class="col-sm-2">
-              <div class="form-group">
-                <label for="location">Location:  </label><input type="text" class="filter" name="location" placeholder="Enter Location">
-              </div>
-            </div>
-            
-            <div class="col-sm-3">
-              <div class="form-group">
-                <label for="price">Max Price:  </label><input type="number" class="filter" name="price" placeholder="Enter maximum price per month">
-              </div>
-            </div>
-            
-            <div class="col-sm-4">
-              <div class="form-group">
-                <label for="start">Start Date: </label><input type="date" class="filter" name="start">
-              </div>
-              <div class="form-group">
-                <label for="end">End Date: </label><input type="date" class="filter" name="end">
-              </div>
-            </div>
-            
-            <div class="col-sm-5">
-              <div class="form-group">
-                <button type = "submit">Submit</button>
-              </div>
-            </div>
-        </div>
-        </div>
-      </form>
-      
-      <div class="row mt-5">
-        {% for item in propList%}
-          <div class = "col-lg-3 col-sm-6" align = "center">
-            <!-- Change the border color -->
-            <div class="">
-              <a href='/show/{{item.PID}}' class="card border-dark mb-3" data-id={{item.PID}} style="max-width: 18rem;">
-                <div style="padding: 30px;">
-                  <div class="card-header">{{item.propName}}</div>
-                  
-                  <img class="card-img-top" src="{{url_for('pic',filename=item.propFilename)}}" alt="{{item.propFilename}}">
-                  <div class="card-body text-dark">
-                    <h5 class="card-text">{{item.propDescription}}</h5>
-                    <p class="card-text">{{item.propLocation}}</p>
-                    <p class="card-text">{{item.propPrice}}</p>
-                    
-                    {% if item.propSmoker == 0 %}
-                    <p class="card-text">Smokers not allowed</p>
-                    {% else %}
-                    <p class="card-text">Smoker friendly</p>
-                    {% endif %}
-                    
-                    {% if item.propGender == 1 %}
-                    <p class="card-text">Female only</p>
-                    {% elif item.propGender == 2 %}
-                    <p class="card-text">Male only</p>
-                    {% else %}
-                    <p class="card-text">No gender preference</p>
-                    {% endif %}
-                    
-                    {% if item.propPet == 1 %}
-                    <p class="card-text">Pet friendly</p>
-                    {% else %}
-                    <p class="card-text">Pets not allowed</p>
-                    {% endif %}
-                  </div>
-                  
-                </div>
-              </a>
+{% extends "layout.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<div class = "container">
+    <form method = "POST" action = "{{ url_for('showProperties') }}">
+      <p>Filter by: </p>
+      <div class="form-inline">
+        <div class = "container row">
+          <div class="col-sm-1"></div>
+          <div class="col-sm-2">
+            <div class="form-group">
+            <label for="gender">Gender: </label>
+            <select name = 'gender'>
+            <option value = 3>Any</option>
+            <option value = 1>Female Only</option>
+            <option value = 2>Male Only</option>
+            <option value = 3>Other</option>
+            </select>
             </div>
           </div>
-        {% endfor %}
-    </div>
+          
+          <div class="col-sm-2">
+            <div class="form-group">
+              <label for="location">Location:  </label>
+              <input type="text" class="filter" name="location" placeholder="Enter Location">
+            </div>
+          </div>
+          
+          <div class="col-sm-2">
+            <div class="form-group">
+              <label for="price">Max Price:  </label>
+              <input type="number" class="filter" name="price" placeholder="Enter maximum price per month">
+            </div>
+          </div>
+          
+          <div class="col-sm-2">
+            <div class="form-group">
+              <label for="start">Start Date: </label>
+              <input type="date" class="filter" name="start">
+            </div>
+            
+            <div class="form-group">
+              <label for="end">End Date: </label>
+              <input type="date" class="filter" name="end">
+            </div>
+          </div>
+          <div class="col-sm-2">
+            <div class="form-group">
+              <input class="btn btn-dark" type = "submit" value="Submit"></input>
+            </div>
+          </div>
+      </div>
+      </div>
+    </form>
+    
+    <div class="row mt-5">
+      {% for item in propList%}
+        <div class = "col-lg-3 col-sm-6" align = "center">
+          <!-- Change the border color -->
+          <div class="">
+            <a href='/show/{{item.PID}}' class="card border-dark mb-3" data-id={{item.PID}} style="max-width: 18rem;">
+              <div style="padding: 30px;">
+                <div class="card-header">{{item.propName}}</div>
+                
+                <img class="card-img-top" src="{{url_for('pic',filename=item.propFilename)}}" alt="{{item.propFilename}}">
+                <div class="card-body text-dark">
+                  <h5 class="card-text">{{item.propDescription}}</h5>
+                  <p class="card-text">{{item.propLocation}}</p>
+                  <p class="card-text">{{item.propPrice}}</p>
+                  
+                  {% if item.propSmoker == 0 %}
+                  <p class="card-text">Smokers not allowed</p>
+                  {% else %}
+                  <p class="card-text">Smoker friendly</p>
+                  {% endif %}
+                  
+                  {% if item.propGender == 1 %}
+                  <p class="card-text">Female only</p>
+                  {% elif item.propGender == 2 %}
+                  <p class="card-text">Male only</p>
+                  {% else %}
+                  <p class="card-text">No gender preference</p>
+                  {% endif %}
+                  
+                  {% if item.propPet == 1 %}
+                  <p class="card-text">Pet friendly</p>
+                  {% else %}
+                  <p class="card-text">Pets not allowed</p>
+                  {% endif %}
+                </div>
+                
+              </div>
+            </a>
+          </div>
+        </div>
+      {% endfor %}
   </div>
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-
-</body>
-
-</html>
-
+</div>
+{% endblock %}
