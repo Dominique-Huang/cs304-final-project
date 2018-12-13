@@ -137,7 +137,7 @@ def addProperty():
                 if mime_type.lower() not in ['jpeg','gif','png']:
                     raise Exception('Not a JPEG, GIF or PNG: {}'.format(mime_type))
                 #filename = secure_filename('{}'.format(mime_type))
-                filename = secure_filename('{}.{}'.format(name,mime_type))
+                filename = secure_filename('{}-{}.{}'.format(UID,name,mime_type))
                 print("filename: ", filename)
                 pathname = os.path.join(app.config['UPLOADS'],filename)
                 print("pathname: ", pathname)
@@ -237,10 +237,6 @@ def showPage(id):
 @app.route('/my-properties', methods = ["POST", "GET"])
 def showMyProperties():
     conn = loft.getConn('loft')
-    # if request.method == 'POST':
-    #     return redirect('index.html')
-    # else:
-    print("in get")
     if 'UID' not in session:
         flash('You must be logged in to view properties')
         return redirect(request.referrer)
@@ -251,6 +247,20 @@ def showMyProperties():
     print(propList)
         
     return render_template('my-properties.html', propList = propList)
+    
+@app.route('/my-reservations', methods = ["POST", "GET"])
+def showMyReservations():
+    conn = loft.getConn('loft')
+    if 'UID' not in session:
+        flash('You must be logged in to view properties')
+        return redirect(request.referrer)
+            
+    UID = session['UID']
+    propList = loft.getRenterProps(conn, UID)
+        
+    print(propList)
+        
+    return render_template('my-reservations.html', propList = propList)
 
 @app.route('/profile/<id>', methods = ["GET"])
 def profilePage(id):
