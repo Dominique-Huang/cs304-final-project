@@ -268,10 +268,24 @@ def profilePage(id):
 
 @app.route('/edit/<id>', methods = ["GET", "POST"])
 def edit(id):
+    conn = loft.getConn('loft')
     if request.method == 'GET':
-        conn = loft.getConn('loft')
-        prop = loft.getOne(conn, id)
-        return render_template('edit.html', item = prop)
+        if 'UID' not in session:
+            return redirect(url_for('login'))
+        
+        UID_session = session['UID']
+        
+        curs = conn.cursor(MySQLdb.cursors.DictCursor)
+        curs.execute('''select UID from host_prop where PID = %s''', [id])
+        row = curs.fetchone()
+        UID_prop = row['UID']
+        
+        if UID_session == UID_prop:
+            conn = loft.getConn('loft')
+            prop = loft.getOne(conn, id)
+            return render_template('edit.html', item = prop)
+        else:
+            return redirect(url_for('showPage', id = id))
     else:
         conn = loft.getConn('loft')
         name = request.form.get('name')
