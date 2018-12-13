@@ -1,46 +1,35 @@
 <!--Purpose: Add a property form-->
-<!doctype html>
-<html lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <meta name=author content="">
-    <meta name=description content="">
-    <meta name=keywords content="">
-    <title></title>
-    <!-- css stylesheets -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
-    <!-- fonts -->
-</head>
-
-<body>
+{% extends "layout.html" %}
+{% block title %}Add Property{% endblock %}
+{% block content %}
     <div align="center">
         <div class="card border-dark mb-3" style="max-width: 40rem;">
         <div style="padding: 30px;">
           <div class="card-header">Create New Property</div>
             <form method = "POST" action = "{{ url_for('addProperty') }}" enctype="multipart/form-data">
-                <!--name = request.form.get('name')-->
+
                 <div class="form-group">
                     <label for="name">Name</label>
                     <input type="text" class="form-control" name="name" aria-describedby="name of property" placeholder="Enter name">
                     <!--<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>-->
                 </div>
-                <!--descrip = request.form.get('descrip')-->
+
                 <div class="form-group">
                     <label for="descrip">Description</label>
                     <textarea class="form-control" name="descrip" rows="3" placeholder="Describe your property"></textarea>
                 </div>
-                <!--loc = request.form.get('location')-->
+
                 <div class="form-group">
                     <label for="location">Location</label>
                     <input type="text" class="form-control" name="location" aria-describedby="enter location" placeholder="Enter your property location">
                 </div>
-                <!--price = request.form.get('price')-->
+
                 <div class="form-group">
                     <label for="price">Price Per Month</label>
                     <input type="number" class="form-control" name="price" aria-describedby="enter price" placeholder="Enter price">
                 </div>
-                <!--smoker = request.form.get('smoker')-->
+
                 <fieldset class="form-group">
                 <label for="smoker">Is your property smoker friendly?</label>
                 <div class="form-check">
@@ -56,7 +45,7 @@
                     </label>
                 </div>
                 </fieldset>
-                <!--gender = request.form.get('gender')-->
+                
                 <fieldset class="form-group">
                 <label for="gender">Do you have a preferred gender?</label>
                 <div class="form-check">
@@ -78,7 +67,7 @@
                   </label>
                 </div>
               </fieldset>
-                <!--pet = request.form.get('pet')-->
+              
                 <fieldset class="form-group">
                 <label for="pet">Is your property pet friendly?</label>
                 <div class="form-check">
@@ -93,44 +82,66 @@
                         No
                     </label>
                 </div>
-                <label for="date">Available Date Ranges</label>
                 
-                <div class="form-check">
-                  <label class="form-check-label">Start: 
-                    <input type="date" class="form-check-input" name="start1" id="start1">
-                  </label>
-                  <label class="form-check-label">End: 
-                    <input type="date" class="form-check-input" name="end1" id="end1">
-                  </label>
+                <label>Available Date Ranges</label>
+                <br>
+                <label>Date Ranges 1:</label>
+                
+                <div class="container col-sm-12" align="center">
+                  <div class="form-group">
+                    <label for="start1" class="control-label">Start: </label>
+                    <input type="date" class="control-label" name="start1" id="start1"></input>                    
+                  </div>
                 </div>
                 
-                <div class="form-check">
-                  <label class="form-check-label">Start: 
-                    <input type="date" class="form-check-input" name="start2" id="start1">
-                  </label>
-                  <label class="form-check-label">End: 
-                    <input type="date" class="form-check-input" name="end2" id="end1">
-                  </label>
+                <div class="container col-sm-12" align="center">
+                  <div class="form-group">
+                    <label for="end1" class="control-label">End: </label>
+                    <input type="date" class="control-label" name="end1" id="end1"></input>
+                  </div>
                 </div>
                 
-                <div class="form-check">
-                  <label class="form-check-label">Start: 
-                    <input type="date" class="form-check-input" name="start3" id="start1">
-                  </label>
-                  <label class="form-check-label">End: 
-                    <input type="date" class="form-check-input" name="end3" id="end1">
-                  </label>
-                 <div class = "form-pic">
-                    <label for="pic">Pic: <input type="file" name="pic"></label>
+                <label>Date Ranges 2:</label>
+                
+                <div class="container col-sm-12" align="center">
+                  <div class="form-group">
+                    <label for="start2" class="control-label">Start: </label>
+                    <input type="date" class="control-label" name="start2" id="start2"></input>                    
+                  </div>
                 </div>
-              </fieldset>
-              <button type="submit" class="btn btn-primary">Submit</button>
+                
+                <div class="container col-sm-12" align="center">
+                  <div class="form-group">
+                    <label for="end2" class="control-label">End: </label>
+                    <input type="date" class="control-label" name="end2" id="end2"></input>
+                  </div>
+                </div>
+                
+                <label>Date Ranges 3:</label>
+                
+                <div class="container col-sm-12" align="center">
+                  <div class="form-group">
+                    <label for="start3" class="control-label">Start: </label>
+                    <input type="date" class="control-label" name="start3" id="start3"></input>                    
+                  </div>
+                </div>
+                
+                <div class="container col-sm-12" align="center">
+                  <div class="form-group">
+                    <label for="end3" class="control-label">End: </label>
+                    <input type="date" class="control-label" name="end3" id="end3"></input>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="pic" class="control-label">Pic: </label>
+                    <input type="file" class="control-label" name="pic">
+                </div>
+                
+              <input type="submit" value ="Submit" class="btn btn-dark"></input>
             </form>
         </div>
         </div>
      </div>
     </div>
-
-</body>
-
-</html>
+{% endblock %}
