@@ -1,7 +1,7 @@
 import MySQLdb
 import bcrypt
 import loft
-from flask import (Flask, url_for, redirect, request, render_template, flash, session)
+from flask import (Flask, url_for, redirect, request, render_template, flash, session, send_from_directory, Response)
 from werkzeug import secure_filename
 import sys, os, random
 import imghdr
@@ -89,6 +89,10 @@ def login():
             return redirect(url_for('showProperties'))
         return render_template('login.html')
 
+@app.route('/pic/<filename>')
+def pic(filename):
+    val = send_from_directory(app.config['UPLOADS'], filename)
+    return val
 
 @app.route('/add-property/', methods = ["GET","POST"])
 # For first time users to create an account
@@ -223,6 +227,7 @@ def showPage(id):
         loft.book(conn, UID, id, start, end)
         
         return render_template(url_for('showMyReservations'))
+
     else:
         prop = loft.getOne(conn, id)
         dates = loft.getDates(conn, id)
