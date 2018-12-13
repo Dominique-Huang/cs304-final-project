@@ -214,18 +214,20 @@ def showPage(id):
     if request.method == 'POST':
         if 'UID' not in session:
             flash('You must be logged in to book')
-            return redirect(request.referrer)
+            return redirect(url_for('login'))
         
-        UID = session['UID']
-        prop = loft.getOne(conn, id)
-        dates = loft.getDates(conn, id)
-
-        start = request.form.get('start')
-        end = request.form.get('end')
-        loft.book(conn, UID, id, start, end)
-        
-        #ideally, this would redirect to my reservations
-        return render_template('show.html', item = prop, dates = dates)
+        else:
+            UID = session['UID']
+            prop = loft.getOne(conn, id)
+            dates = loft.getDates(conn, id)
+    
+            start = request.form.get('start')
+            end = request.form.get('end')
+            print("booked!")
+            loft.book(conn, UID, id, start, end)
+            
+            #ideally, this would redirect to my reservations
+            return render_template('show.html', item = prop, dates = dates)
     else:
         prop = loft.getOne(conn, id)
         dates = loft.getDates(conn, id)
