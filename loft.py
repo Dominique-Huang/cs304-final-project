@@ -48,7 +48,6 @@ def addHostProp(conn, UID, PID):
     curs.execute('''insert into host_prop values (%s, %s)''',
                 (UID, PID,))
     return curs.fetchone()
-<<<<<<< HEAD
 
 def addRenterProp(conn, UID, PID, start, end):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
@@ -56,9 +55,6 @@ def addRenterProp(conn, UID, PID, start, end):
                 (UID, PID, start, end))
     return curs.fetchone()
 
-=======
-    
->>>>>>> ms/booking
 # Searching properties based on specific filters
 def searchProp(conn, gender, location, price, start, end):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
@@ -145,7 +141,8 @@ def getHostProps(conn, UID):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('''select * from (host_prop inner join properties 
                 on host_prop.PID = properties.PID)
-                where host_prop.UID = %s''', [UID])
+                where host_prop.UID = %s
+                group by properties.PID''', [UID])
     return curs.fetchall()
 
 def getRenterProps(conn, UID):
@@ -153,7 +150,8 @@ def getRenterProps(conn, UID):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('''select * from (renter_prop inner join properties 
                 on renter_prop.PID = properties.PID)
-                where renter_prop.UID = %s''', [UID])
+                where renter_prop.UID = %s
+                group by properties.PID''', [UID])
     return curs.fetchall()
     
 if __name__ == '__main__':
