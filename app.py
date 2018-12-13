@@ -99,8 +99,7 @@ def pic(filename):
 def addProperty():
     if request.method == 'POST':
         if 'UID' not in session:
-            flash('You must be logged in to book')
-            return redirect(request.referrer)
+            return redirect(url_for('login'))
         
         conn = loft.getConn('loft')
 
@@ -172,7 +171,7 @@ def addProperty():
             UID = session['UID']
             loft.addHostProp(conn, UID, PID)
             
-            return redirect(url_for('showProperties'))
+            return redirect(url_for('showMyProperties'))
     
     else:
         if 'UID' not in session:
@@ -217,21 +216,18 @@ def showPage(id):
     conn = loft.getConn('loft')
     if request.method == 'POST':
         if 'UID' not in session:
-            flash('You must be logged in to book')
             return redirect(url_for('login'))
         
-        else:
-            UID = session['UID']
-            prop = loft.getOne(conn, id)
-            dates = loft.getDates(conn, id)
-    
-            start = request.form.get('start')
-            end = request.form.get('end')
-            print("booked!")
-            loft.book(conn, UID, id, start, end)
-            
-            #ideally, this would redirect to my reservations
-            return render_template('show.html', item = prop, dates = dates)
+        UID = session['UID']
+        prop = loft.getOne(conn, id)
+        dates = loft.getDates(conn, id)
+
+        start = request.form.get('start')
+        end = request.form.get('end')
+        loft.book(conn, UID, id, start, end)
+        
+        return render_template(url_for('showMyReservations'))
+
     else:
         prop = loft.getOne(conn, id)
         dates = loft.getDates(conn, id)
@@ -243,7 +239,7 @@ def showMyProperties():
     conn = loft.getConn('loft')
     if 'UID' not in session:
         flash('You must be logged in to view properties')
-        return redirect(request.referrer)
+        return redirect(url_for('login'))
             
     UID = session['UID']
     propList = loft.getHostProps(conn, UID)
@@ -257,7 +253,7 @@ def showMyReservations():
     conn = loft.getConn('loft')
     if 'UID' not in session:
         flash('You must be logged in to view properties')
-        return redirect(request.referrer)
+        return redirect(url_for('login'))
             
     UID = session['UID']
     propList = loft.getRenterProps(conn, UID)
@@ -274,10 +270,24 @@ def profilePage(id):
 
 @app.route('/edit/<id>', methods = ["GET", "POST"])
 def edit(id):
+    conn = loft.getConn('loft')
     if request.method == 'GET':
-        conn = loft.getConn('loft')
-        prop = loft.getOne(conn, id)
-        return render_template('edit.html', item = prop)
+        if 'UID' not in session:
+            return redirect(url_for('login'))
+        
+        UID_session = session['UID']
+        
+        curs = conn.cursor(MySQLdb.cursors.DictCursor)
+        curs.execute('''select UID from host_prop where PID = %s''', [id])
+        row = curs.fetchone()
+        UID_prop = row['UID']
+        
+        if UID_session == UID_prop:
+            conn = loft.getConn('loft')
+            prop = loft.getOne(conn, id)
+            return render_template('edit.html', item = prop)
+        else:
+            return redirect(url_for('showPage', id = id))
     else:
         conn = loft.getConn('loft')
         name = request.form.get('name')
