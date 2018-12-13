@@ -95,8 +95,7 @@ def login():
 def addProperty():
     if request.method == 'POST':
         if 'UID' not in session:
-            flash('You must be logged in to book')
-            return redirect(request.referrer)
+            return redirect(url_for('login'))
         
         conn = loft.getConn('loft')
 
@@ -168,7 +167,7 @@ def addProperty():
             UID = session['UID']
             loft.addHostProp(conn, UID, PID)
             
-            return redirect(url_for('showProperties'))
+            return redirect(url_for('showMyProperties'))
     
     else:
         if 'UID' not in session:
@@ -213,8 +212,7 @@ def showPage(id):
     conn = loft.getConn('loft')
     if request.method == 'POST':
         if 'UID' not in session:
-            flash('You must be logged in to book')
-            return redirect(request.referrer)
+            return redirect(url_for('login'))
         
         UID = session['UID']
         prop = loft.getOne(conn, id)
@@ -224,8 +222,7 @@ def showPage(id):
         end = request.form.get('end')
         loft.book(conn, UID, id, start, end)
         
-        #ideally, this would redirect to my reservations
-        return render_template('show.html', item = prop, dates = dates)
+        return render_template(url_for('showMyReservations'))
     else:
         prop = loft.getOne(conn, id)
         dates = loft.getDates(conn, id)
@@ -237,7 +234,7 @@ def showMyProperties():
     conn = loft.getConn('loft')
     if 'UID' not in session:
         flash('You must be logged in to view properties')
-        return redirect(request.referrer)
+        return redirect(url_for('login'))
             
     UID = session['UID']
     propList = loft.getHostProps(conn, UID)
@@ -251,7 +248,7 @@ def showMyReservations():
     conn = loft.getConn('loft')
     if 'UID' not in session:
         flash('You must be logged in to view properties')
-        return redirect(request.referrer)
+        return redirect(url_for('login'))
             
     UID = session['UID']
     propList = loft.getRenterProps(conn, UID)
