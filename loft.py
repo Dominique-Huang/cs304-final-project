@@ -82,6 +82,7 @@ def updateUser(conn, UID, name, email, pw, university):
     curs.execute('''update users set name = %s, email = %s, pw = %s, university = %s where UID = %s''', 
                 (name, email, pw, university, UID))
     return curs.fetchone
+    
 def updateProperty(conn, PID, name, descrip, loc, price, smoker, gender, pet):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('''update properties 
