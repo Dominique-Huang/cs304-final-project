@@ -49,33 +49,41 @@
               <div class="form-group">
               <label for="gender">Gender: </label>
               <select name = 'gender'>
-              <option value = 1>Female</option>
-              <option value = 2>Male</option>
-              <option value = 3>Other</option>
               <option value = 3>Any</option>
+              <option value = 1>Female Only</option>
+              <option value = 2>Male Only</option>
+              <option value = 3>Other</option>
               </select>
+              </div>
+            </div>
+            
+            <div class="col-sm-2">
+              <div class="form-group">
+                <label for="location">Location:  </label><input type="text" class="filter" name="location" placeholder="Enter Location">
               </div>
             </div>
             
             <div class="col-sm-3">
               <div class="form-group">
-                <label for="location">Location:  </label><input type="text" class="filter" id="location" placeholder="Enter Location">
+                <label for="price">Max Price:  </label><input type="number" class="filter" name="price" placeholder="Enter maximum price per month">
               </div>
             </div>
             
             <div class="col-sm-4">
               <div class="form-group">
-                <label for="price">Max Price:  </label><input type="number" class="filter" id="price" placeholder="Enter maximum price per month">
+                <label for="start">Start Date: </label><input type="date" class="filter" name="start">
               </div>
-        
+              <div class="form-group">
+                <label for="end">End Date: </label><input type="date" class="filter" name="end">
+              </div>
             </div>
-            <div class="col-sm-3">
+            
+            <div class="col-sm-5">
               <div class="form-group">
                 <button type = "submit">Submit</button>
               </div>
             </div>
-            
-          </div>
+        </div>
         </div>
       </form>
       

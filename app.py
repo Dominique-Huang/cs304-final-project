@@ -192,12 +192,12 @@ def showProperties():
         start = request.form.get('start')
         end = request.form.get('end')
         if start == '':
-            start = '3000-12-31' #no upper limit
+            start = '3000-12-31' #no lower limit
         if end == '':
-            end = '1000-01-01' #no lower limit
+            end = '1000-01-01' #no upper limit
         
         print("Gender: " + str(gender))
-        print("Location: " + location)
+        print("Location: " + (location))
         print("Price: " + str(price))
         print("Start: " + start)
         print("End: " + end)
