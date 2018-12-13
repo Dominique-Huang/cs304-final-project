@@ -232,6 +232,25 @@ def showPage(id):
         prop = loft.getOne(conn, id)
         dates = loft.getDates(conn, id)
         return render_template('show.html', item = prop, dates = dates)
+        
+
+@app.route('/my-properties', methods = ["POST", "GET"])
+def showMyProperties():
+    conn = loft.getConn('loft')
+    # if request.method == 'POST':
+    #     return redirect('index.html')
+    # else:
+    print("in get")
+    if 'UID' not in session:
+        flash('You must be logged in to view properties')
+        return redirect(request.referrer)
+            
+    UID = session['UID']
+    propList = loft.getHostProps(conn, UID)
+        
+    print(propList)
+        
+    return render_template('my-properties.html', propList = propList)
 
 @app.route('/profile/<id>', methods = ["GET"])
 def profilePage(id):
