@@ -37,10 +37,10 @@
                 <div class="form-group">
                     <label for="pw">Password</label>
                     <input type="password" class="form-control" name="pw" aria-describedby="password" placeholder="Enter password">
-                    <small class="form-text text-muted">Password must be longer than 6 characters and contain a digit</small>
                 </div>
                 
-              <button type="submit" class="btn btn-primary sign_up">Sign Up</button>
+              <button type="submit" class="btn btn-primary sign_up">Login</button>
+              <a href = "{{url_for('addUser')}}"><button type ="button" class="btn btn-primary sign_up">Sign Up</button></a>
             </form>
         </div>
         </div>
