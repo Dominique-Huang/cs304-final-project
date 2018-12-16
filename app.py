@@ -214,11 +214,11 @@ def showProperties():
 @app.route('/show/<id>', methods = ["POST", "GET"])
 def showPage(id):
     conn = loft.getConn('loft')
-    if request.method == 'POST':
-        if 'UID' not in session:
-            return redirect(url_for('login'))
+    if 'UID' not in session:
+        return redirect(url_for('login'))
         
-        UID = session['UID']
+    UID = session['UID']
+    if request.method == 'POST':
         prop = loft.getOne(conn, id)
         dates = loft.getDates(conn, id)
 
@@ -231,7 +231,8 @@ def showPage(id):
     else:
         prop = loft.getOne(conn, id)
         dates = loft.getDates(conn, id)
-        return render_template('show.html', item = prop, dates = dates)
+        bookList = loft.getBookings(conn, UID)
+        return render_template('show.html', item = prop, dates = dates, bookList = bookList)
         
 
 @app.route('/my-properties', methods = ["POST", "GET"])
@@ -243,10 +244,7 @@ def showMyProperties():
             
     UID = session['UID']
     propList = loft.getHostProps(conn, UID)
-    print(propList)
     bookList = loft.getBookings(conn, UID)
-    print(bookList)
-    print(type(bookList))
     return render_template('my-properties.html', propList = propList, bookList = bookList)
     
 @app.route('/my-reservations', methods = ["POST", "GET"])

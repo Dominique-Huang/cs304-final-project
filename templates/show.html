@@ -33,6 +33,16 @@
                     {% else %}
                     <p class="card-text">Pets not allowed</p>
                     {% endif %}
+                    
+                    {% if bookList != NULL %}
+                      {% for booking in bookList %}
+                        {% if booking.PID == item.PID %}
+                          <p> {{booking.name}} booked from {{booking.startDate}} : {{booking.endDate}}</p>
+                        {% endif %}
+                      {% endfor %}
+                    {% endif %}
+                    
+                    
                   <form method = "POST" action = "{{ url_for('showPage', id = item.PID) }}">
                     {% for date in dates %}
                       <p class="card-text">{{date.startDate}} : {{date.endDate}}
