@@ -226,7 +226,7 @@ def showPage(id):
         end = request.form.get('end')
         loft.book(conn, UID, id, start, end)
         
-        return render_template(url_for('showMyReservations'))
+        return redirect(url_for('showMyReservations'))
 
     else:
         prop = loft.getOne(conn, id)
@@ -243,10 +243,11 @@ def showMyProperties():
             
     UID = session['UID']
     propList = loft.getHostProps(conn, UID)
-        
     print(propList)
-        
-    return render_template('my-properties.html', propList = propList)
+    bookList = loft.getBookings(conn, UID)
+    print(bookList)
+    print(type(bookList))
+    return render_template('my-properties.html', propList = propList, bookList = bookList)
     
 @app.route('/my-reservations', methods = ["POST", "GET"])
 def showMyReservations():

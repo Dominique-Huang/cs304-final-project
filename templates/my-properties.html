@@ -37,6 +37,15 @@
                     {% else %}
                     <p class="card-text">Pets not allowed</p>
                     {% endif %}
+                    
+                    {% if bookList != NULL %}
+                      <p> Bookings: </p>
+                      {% for booking in bookList %}
+                        {% if booking.PID == item.PID %}
+                          <p> {{booking.name}} from {{booking.startDate}} : {{booking.endDate}}</p>
+                        {% endif %}
+                      {% endfor %}
+                    {% endif %}
                   </div>
                   
                 </div>

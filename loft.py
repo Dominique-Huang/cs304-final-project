@@ -155,6 +155,17 @@ def getRenterProps(conn, UID):
                 group by properties.PID''', [UID])
     return curs.fetchall()
     
+def getBookings(conn, UID):
+    '''retrieves bookings for each of host's properties'''
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''select users.name, renter_prop.UID, renter_prop.PID, 
+                renter_prop.startDate, renter_prop.endDate
+                from users, renter_prop, host_prop
+                where host_prop.PID = renter_prop.PID 
+                and users.UID = renter_prop.UID and
+                host_prop.UID = %s''', [UID])
+    return curs.fetchall()
+    
 if __name__ == '__main__':
     conn = getConn('loft')
     # createDate(conn, 2, '2018-01-01', '2018-06-01')
