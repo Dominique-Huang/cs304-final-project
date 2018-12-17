@@ -48,7 +48,14 @@ def addUser():
             loft.createUser(conn, name, email, hashed, school)
             return redirect(url_for('login'))
         else:
-            return render_template('addUser.html')
+            user = {
+                "name": name,
+                "email": email, 
+                "school": school,
+                "pw": pw,
+                "pw2": pw2
+            }
+            return render_template('addUser.html', user = user)
     else:
         return render_template('addUser.html')
 
@@ -130,7 +137,16 @@ def addProperty():
             Valid = False
         
         if Valid == False:
-            return render_template('addProp.html')
+            item = {
+                "propName": name,
+                "propDesciption": descrip,
+                "propLocation":loc,
+                "propPrice":price,
+                "propSmoker":smoker,
+                "propGender":gender,
+                "propPet":pet
+            }
+            return render_template('addProp.html', item = item)
         else:
             try:
                 f = request.files['pic'] #update front-end to ask for pic
