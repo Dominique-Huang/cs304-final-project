@@ -230,10 +230,15 @@ def showProperties():
 @app.route('/show/<id>', methods = ["POST", "GET"])
 def showPage(id):
     conn = loft.getConn('loft')
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
     if 'UID' not in session:
         return redirect(url_for('login'))
-        
+    
     UID = session['UID']
+    UID_prop = loft.getHost(conn, id)
+    
+    host = True if UID == UID_prop else False
+    
     if request.method == 'POST':
         prop = loft.getOne(conn, id)
         dates = loft.getDates(conn, id)
@@ -243,12 +248,18 @@ def showPage(id):
         loft.book(conn, UID, id, start, end)
         
         return redirect(url_for('showMyReservations'))
-
     else:
         prop = loft.getOne(conn, id)
         dates = loft.getDates(conn, id)
         bookList = loft.getBookings(conn, UID)
-        return render_template('show.html', item = prop, dates = dates, bookList = bookList)
+        
+        noDates = (True if len(dates) == 0 else False)
+        noBookings = True
+        for booking in bookList:
+            if int(booking['PID']) == int(id):
+                noBookings = False
+            
+        return render_template('show.html', item = prop, dates = dates, bookList = bookList, host = host, noDates = noDates, noBookings = noBookings)
         
 
 @app.route('/my-properties', methods = ["POST", "GET"])
@@ -269,7 +280,6 @@ def showMyReservations():
     if 'UID' not in session:
         flash('You must be logged in to view properties')
         return redirect(url_for('login'))
-            
     UID = session['UID']
     propList = loft.getRenterProps(conn, UID)
         
@@ -292,10 +302,7 @@ def edit(id):
         
         UID_session = session['UID']
         
-        curs = conn.cursor(MySQLdb.cursors.DictCursor)
-        curs.execute('''select UID from host_prop where PID = %s''', [id])
-        row = curs.fetchone()
-        UID_prop = row['UID']
+        UID_prop = loft.getHost(conn, id)
         
         if UID_session == UID_prop:
             conn = loft.getConn('loft')
@@ -318,10 +325,17 @@ def edit(id):
 @app.route('/delete/<id>', methods = ['GET', 'DELETE'])
 def delete(id):
     conn = loft.getConn('loft')
-    loft.deleteProp(conn, id)
-    return redirect(url_for('showProperties'))
+    if 'UID' in session:
+        UID_session = session['UID']
+        UID_prop = loft.getHost(conn, id)
+        if UID_session == UID_prop:
+            loft.deleteProp(conn, id)
+            return redirect(url_for('showMyProperties'))
+        else:
+            return redirect(url_for('showProperties'))
+    else:
+        return redirect(url_for('login'))
    
- 
 @app.route('/logout/')
 def logout():
     try:

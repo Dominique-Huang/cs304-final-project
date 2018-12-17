@@ -34,28 +34,46 @@
                     <p class="card-text">Pets not allowed</p>
                     {% endif %}
                     
-                    {% if bookList != NULL %}
-                      {% for booking in bookList %}
-                        {% if booking.PID == item.PID %}
-                          <p> {{booking.name}} booked from {{booking.startDate}} : {{booking.endDate}}</p>
+                    {% if host %}
+                    <p class = "card-text">Reservations</p>
+                      {% if bookList != NULL %}
+                        {% for booking in bookList %}
+                          {% if booking.PID == item.PID %}
+                            <p> {{booking.name}} booked from {{booking.startDate}} : {{booking.endDate}}</p>
+                          {% endif %}
+                        {% endfor %}
+                        {% if noBookings %}
+                          <p>There are no reservations at this time</p>
                         {% endif %}
+                      {% endif %}
+                        
+                    <p class = "card-text">Available Dates</p>
+                      {% for date in dates %}
+                        <p>{{date.startDate}} : {{date.endDate}}</p>
                       {% endfor %}
+                      {% if noDates %}
+                        <p>This item is not available at this time</p>
+                      {% endif %}
+
+                      <button onclick="window.location.href='/edit/{{item.PID}}'" type="button" class="btn btn-dark">Edit</button>
                     {% endif %}
                     
                     
                   <form method = "POST" action = "{{ url_for('showPage', id = item.PID) }}">
-                    {% for date in dates %}
-                      <p class="card-text">{{date.startDate}} : {{date.endDate}}
-                      <input type = "hidden" name = "start" value = "{{date.startDate}}">
-                      <input type = "hidden" name = "end" value = "{{date.endDate}}">
-                      <button type = "submit" name = "book">Book This</button></p>
-                    {% endfor %}
+                    {% if not host %}
+                      <p>Available Dates</p>
+                      {% for date in dates %}
+                        <p class="card-text">{{date.startDate}} : {{date.endDate}}
+                        <input type = "hidden" name = "start" value = "{{date.startDate}}">
+                        <input type = "hidden" name = "end" value = "{{date.endDate}}">
+                        <button type = "submit" name = "book">Book This</button></p>
+                      {% endfor %}
+                      {% if noDates %}
+                        <p>This property is not available at this time</p>
+                      {% endif %}
+                    {% endif %}
+
                   </form>
-                </div>
-                <div>
-                  
-                  <button onclick="window.location.href='/edit/{{item.PID}}'" type="button" class="btn btn-dark">Edit</button>
-                  <button onclick="window.location.href='/delete/{{item.PID}}'" type="button" class="btn btn-dark">Delete</button>
                 </div>
               </div>
             </div>

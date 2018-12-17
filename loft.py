@@ -165,6 +165,13 @@ def getBookings(conn, UID):
                 and users.UID = renter_prop.UID and
                 host_prop.UID = %s''', [UID])
     return curs.fetchall()
+
+def getHost(conn, PID):
+    '''retrieves host UID of specific property'''
+    curs =  conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('select UID from host_prop where PID = %s', [PID])
+    row = curs.fetchone()
+    return row['UID']
     
 if __name__ == '__main__':
     conn = getConn('loft')
@@ -172,9 +179,10 @@ if __name__ == '__main__':
     # print(searchProp(conn,3,'',100000, '2019-12-31','2020-05-01'))
     # print(searchProp(conn,3,'',100000, '3000-12-31', '1000-01-01'))
     # print(searchProp(conn,2,'',100000, '3000-12-31','1000-01-01'))
-    createProperty(conn, 'Litter box', 'Litter box in Front End', 'Front End', 50, 0, 3, 1, 'Litter_Box.jpeg')
+    # createProperty(conn, 'Litter box', 'Litter box in Front End', 'Front End', 50, 0, 3, 1, 'Litter_Box.jpeg')
     # user = createUser(conn, 'Ally', 'ally@tufts.edu', 'Password123', 'Tufts University')
     # prop = createProperty(conn, 'House', 'A House in Boston', 'Boston', 800, 0, 1, 0)
     # print prop
     # print(searchProp(conn,3,'Cambridge',10000))
     # print(searchProp(conn,3,"",10000))
+    print(getHost(conn, 3))
