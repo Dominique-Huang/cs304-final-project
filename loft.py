@@ -20,7 +20,7 @@ def createUser(conn, name, email, pw, university):
     
 def createProperty(conn, name, descrip, loc, price, smoker, gender, pet, picfile):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('''insert into properties values (%s, %s, %s, %s, %s, %s, %s, %s, NULL)''', 
+    curs.execute('''insert into properties values (%s, %s, %s, %s, %s, %s, %s, %s, NULL, NULL)''', 
                 (name, descrip, loc, price, smoker, gender, pet, picfile))
     curs.execute('''select last_insert_id() from properties''')
     return curs.fetchone()
@@ -172,6 +172,15 @@ def getHost(conn, PID):
     curs.execute('select UID from host_prop where PID = %s', [PID])
     row = curs.fetchone()
     return row['UID']
+
+def updateRating(conn, UID, PID, rating):
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''insert into ratings (UID, PID, rating) values (%s, %s, %s)
+                                on duplicate key update rating = %s''', [UID, PID, rating, rating])
+    curs.execute('''select avg(rating) from ratings where ratings.PID = %s''', [PID])
+    avg = curs.fetchone()['avg(rating)']
+    curs.execute('''update properties set rating = %s where properties.PID = %s''', [avg, PID])
+    return avg
     
 if __name__ == '__main__':
     conn = getConn('loft')
@@ -181,8 +190,8 @@ if __name__ == '__main__':
     # print(searchProp(conn,2,'',100000, '3000-12-31','1000-01-01'))
     # createProperty(conn, 'Litter box', 'Litter box in Front End', 'Front End', 50, 0, 3, 1, 'Litter_Box.jpeg')
     # user = createUser(conn, 'Ally', 'ally@tufts.edu', 'Password123', 'Tufts University')
-    # prop = createProperty(conn, 'House', 'A House in Boston', 'Boston', 800, 0, 1, 0)
+    prop = createProperty(conn, 'House', 'A House in Boston', 'Boston', 800, 0, 1, 0, None)
     # print prop
     # print(searchProp(conn,3,'Cambridge',10000))
     # print(searchProp(conn,3,"",10000))
-    print(getHost(conn, 3))
+    # print(getHost(conn, 3))

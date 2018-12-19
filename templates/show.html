@@ -10,6 +10,21 @@
                 <div class="card-header">{{item.propName}}</div>
                 
                 <img class="card-img-top" src="{{url_for('pic',filename=item.propFilename)}}" alt="{{item.propFilename}}">
+                <form id = "ratingForm">
+                  <div><b>Current Rating:</b> <span id = "itemRating">{{item.rating}}</span></div>
+                  <b>Rate:</b>
+                  <input type="hidden" name="PID" value={{item.PID}}>
+                  
+                  <label class="prop-rating" name={{item.PID}}>1 <input type="radio" name="stars" value="1"></label>
+                  
+                  <label class="prop-rating" name={{item.PID}}>2 <input type="radio" name="stars" value="2"></label>
+                  
+                  <label class="prop-rating" name={{item.PID}}>3 <input type="radio" name="stars" value="3"></label>
+                  
+                  <label class="prop-rating" name={{item.PID}}>4 <input type="radio" name="stars" value="4"></label>
+                  
+                  <label class="prop-rating" name={{item.PID}}>5 <input type="radio" name="stars" value="5"></label>
+                </form>
                 <div class="card-body text-dark">
                   <h5 class="card-text">{{item.propDescription}}</h5>
                   <p class="card-text">{{item.propLocation}}</p>
@@ -35,7 +50,7 @@
                     {% endif %}
                     
                     {% if host %}
-                    <p class = "card-text">Reservations</p>
+                    <p class = "card-text">Reservations: </p>
                       {% if bookList != NULL %}
                         {% for booking in bookList %}
                           {% if booking.PID == item.PID %}
@@ -79,4 +94,23 @@
             </div>
           </div>
       </div>
+{% endblock %}
+{% block script %}
+<script>
+  // var progressive_on = false;
+        
+  $("input[name=stars]").hide();
+
+  $("#ratingForm").on('click', ".prop-rating", function () {
+      that = this;
+      $.post('/rateProp/',
+      {
+          PID: $(this).attr("name"),
+          rating: $(this).find("input").val()
+      },
+      function(resp) {
+          $('#ratingForm').find("#itemRating").text(resp.avg);
+      });
+  });
+</script>
 {% endblock %}
