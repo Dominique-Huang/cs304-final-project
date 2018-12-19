@@ -3,11 +3,15 @@
 {% extends "layout.html" %}
 {% block title %}My Profile{% endblock %}
 {% block content %}
-    <div id="contentContainer">
-    <h1>{{profile.name}}</h1>
-    <p>{{profile.university}}
-    <p>{{profile.email}}</p>
-    
-
-    </div>
+<div align = "center">
+          <!-- Change the border color -->
+            <div class="card border-dark mb-3" style="max-width: 40rem;">
+              <div style="padding: 30px;">
+                <div class="card-header"><b>Name: </b>{{profile.name}}</div>
+                <div class="card-text"><b>University: </b>{{profile.university}}</div>
+                <div class="card-text"><b>Email: </b>{{profile.email}}</div>
+                            
+              </div>
+            </div>
+      </div>
 {% endblock %}
