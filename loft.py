@@ -172,6 +172,15 @@ def getHost(conn, PID):
     curs.execute('select UID from host_prop where PID = %s', [PID])
     row = curs.fetchone()
     return row['UID']
+
+def updateRating(conn, UID, PID, rating):
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''insert into ratings (UID, PID, rating) values (%s, %s, %s)
+                                on duplicate key update rating = %s''', [UID, PID, rating, rating])
+    curs.execute('''select avg(rating) from ratings where ratings.PID = %s''', [PID])
+    avg = curs.fetchone()['avg(rating)']
+    curs.execute('''update properties set rating = %s where properties.PID = %s''', [avg, PID])
+    return avg
     
 if __name__ == '__main__':
     conn = getConn('loft')

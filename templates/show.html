@@ -10,6 +10,20 @@
                 <div class="card-header">{{item.propName}}</div>
                 
                 <img class="card-img-top" src="{{url_for('pic',filename=item.propFilename)}}" alt="{{item.propFilename}}">
+                <div>{{item.rating}}</div>
+                <form class = "" method="post" action="/rateMovie">
+                  <input type="hidden" name="PID" value={{item.PID}}>
+                  
+                  <label class="movie-rating">1 </label>
+                  
+                  <label class="movie-rating">2 </label>
+                  
+                  <label class="movie-rating">3 </label>
+                  
+                  <label class="movie-rating">4 </label>
+                  
+                  <label class="movie-rating">5 </label>
+                </form>
                 <div class="card-body text-dark">
                   <h5 class="card-text">{{item.propDescription}}</h5>
                   <p class="card-text">{{item.propLocation}}</p>
@@ -79,4 +93,19 @@
             </div>
           </div>
       </div>
+{% endblock %}
+{% block script %}
+<script>
+        $("#mList").on('click', ".movie-rating", function () {
+            that = this;
+            $.post('/rateMovieAjax/',
+            {
+                PID: $(this).closest("[name]").attr("PID"),
+                rating: $(this).find("input").val()
+            },
+            function(resp) {
+                $('[name=' + resp.PID + ']').find('.rating').text(resp.avg);
+            });
+        });
+</script>
 {% endblock %}

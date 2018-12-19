@@ -46,6 +46,7 @@ create table properties(
     `propPet` int(1) DEFAULT NULL, /*1 if okay with pet, 0 if not*/
     `propFilename` varchar(50),
     `PID` int(10) unsigned NOT NULL AUTO_INCREMENT,
+    `rating` float DEFAULT NULL,
     PRIMARY KEY (PID)
 );
 
@@ -84,6 +85,13 @@ create table renter_prop(
     primary key (UID, PID)
 );
 
+drop table if exists ratings;
+create table ratings (
+    UID int,
+    PID int,
+    rating int,
+    PRIMARY KEY (UID, PID)
+);
 
 -- INSERT INTO users VALUES ('Freddie', 'freddie@bu.edu', 'password','Boston University',1), ('Mary','mary@mit.edu', 'password','Massachusetts Institute of Technology', NULL);
 -- INSERT INTO tenants VALUES (0, 2, 0, 1);

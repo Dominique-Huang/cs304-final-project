@@ -1,7 +1,7 @@
 import MySQLdb
 import bcrypt
 import loft
-from flask import (Flask, url_for, redirect, request, render_template, flash, session, send_from_directory, Response)
+from flask import (Flask, url_for, redirect, request, render_template, flash, session, send_from_directory, Response, jsonify)
 from werkzeug import secure_filename
 import sys, os, random
 import imghdr
@@ -351,6 +351,19 @@ def logout():
     except Exception as err:
         flash('some kind of error '+str(err))
         return redirect( url_for('index') )
+
+@app.route('/rateMovieAjax/', methods=["POST"])
+def ajaxRate():
+    UID = session['UID']
+    if UID == "":
+        flash('you are not logged in. Please login or join')
+        return redirect( url_for('login') )
+        
+    conn = loft.getConn('loft')
+    PID = request.form.get('PID')
+    rating = request.form.get('rating')
+    avg = loft.updateRating(conn, UID, PID, rating)
+    return jsonify({'avg':float(avg), 'PID':PID})
 
 if __name__ == '__main__':
     app.debug = True
