@@ -146,7 +146,7 @@ def addProperty():
                 "propGender":gender,
                 "propPet":pet
             }
-            return render_template('addProp.html', item = item)
+            return render_template('addProp.html', item = item, UID=UID)
         else:
             try:
                 f = request.files['pic'] #update front-end to ask for pic
@@ -166,7 +166,7 @@ def addProperty():
             except Exception as err:
                 flash('Upload failed {why}'.format(why=err))
                 print('Upload failed {why}'.format(why=err))
-                return render_template('addProp.html')
+                return render_template('addProp.html', UID=UID)
 
             row = loft.createProperty(conn, name, descrip, loc, price, smoker, gender, pet, filename)
             
@@ -194,7 +194,8 @@ def addProperty():
             flash('You must be logged in to create a property')
             return redirect(url_for('login'))
         else:
-            return render_template('addProp.html')
+            UID = session['UID']
+            return render_template('addProp.html', UID=UID)
 
 @app.route('/', methods = ["GET","POST"])
 def showProperties():
@@ -215,17 +216,20 @@ def showProperties():
         if end == '':
             end = '1000-01-01' #no upper limit
         
-        print("Gender: " + str(gender))
-        print("Location: " + (location))
-        print("Price: " + str(price))
-        print("Start: " + start)
-        print("End: " + end)
-        # propList = loft.getAll(conn) #shows all properties
+        # print("Gender: " + str(gender))
+        # print("Location: " + (location))
+        # print("Price: " + str(price))
+        # print("Start: " + start)
+        # print("End: " + end)
+        # # propList = loft.getAll(conn) #shows all properties
 
         propList = loft.searchProp(conn, gender, location, price, start, end)
     else: 
         propList = loft.getAll(conn) #shows all properties
-    return render_template('index.html', propList = propList)
+    if 'UID' not in session:
+      return render_template('index.html', propList = propList)
+    UID = session['UID']
+    return render_template('index.html', propList = propList, UID=UID)
 
 @app.route('/show/<id>', methods = ["POST", "GET"])
 def showPage(id):
@@ -259,7 +263,7 @@ def showPage(id):
             if int(booking['PID']) == int(id):
                 noBookings = False
             
-        return render_template('show.html', item = prop, dates = dates, bookList = bookList, host = host, noDates = noDates, noBookings = noBookings)
+        return render_template('show.html', item = prop, dates = dates, bookList = bookList, host = host, noDates = noDates, noBookings = noBookings, UID=UID)
         
 
 @app.route('/my-properties', methods = ["POST", "GET"])
@@ -272,7 +276,7 @@ def showMyProperties():
     UID = session['UID']
     propList = loft.getHostProps(conn, UID)
     bookList = loft.getBookings(conn, UID)
-    return render_template('my-properties.html', propList = propList, bookList = bookList)
+    return render_template('my-properties.html', propList = propList, bookList = bookList, UID=UID)
     
 @app.route('/my-reservations', methods = ["POST", "GET"])
 def showMyReservations():
@@ -285,13 +289,13 @@ def showMyReservations():
         
     print(propList)
         
-    return render_template('my-reservations.html', propList = propList)
+    return render_template('my-reservations.html', propList = propList, UID=UID)
 
 @app.route('/profile/<id>', methods = ["GET"])
 def profilePage(id):
     conn = loft.getConn('loft')
     profile = loft.getProfile(conn, id)
-    return render_template('profile.html', profile = profile)
+    return render_template('profile.html', profile = profile, UID=id)
 
 @app.route('/edit/<id>', methods = ["GET", "POST"])
 def edit(id):
@@ -307,7 +311,7 @@ def edit(id):
         if UID_session == UID_prop:
             conn = loft.getConn('loft')
             prop = loft.getOne(conn, id)
-            return render_template('edit.html', item = prop)
+            return render_template('edit.html', item = prop, UID=UID)
         else:
             return redirect(url_for('showPage', id = id))
     else:
